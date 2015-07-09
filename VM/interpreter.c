@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <stdbool.h>
 
 #include "interpreter.h"
 
 #define SIZE 8 /* Base size */
-#define MEMORY_SIZE ((int) pow(2, SIZE))
+#define MEMORY_SIZE 256
 #define STACK_START 10
 
 #define regPC registers[PC]
@@ -95,25 +94,25 @@ void cmp(Registers r) {
 	regPC++;
 }
 
-void clr(Registers r) {
-	r = 0;
+void clr(int *r) {
+	*r = 0;
 	Z_ENABLE;
 }
 
-void inc(Registers r) {
-	r++;
-	int temp = r;
+void inc(int *r) {
+	*r++;
+	int temp = *r;
 	setflags(temp);
 }
 
-void load(Registers r) {
+void load(int *r) {
 	regPC++;
-	r = memory[regPC];
+	*r = memory[regPC];
 }
 
-void and(Registers r) {
+void and(int *r) {
 	regPC++;
-	r &= memory[regPC];
+	*r &= memory[regPC];
 }
 
 void store(Registers r) {
@@ -127,29 +126,34 @@ void bit(Registers r) {
 	regPC++;
 }
 
-void lsr(Registers r) {
-	r >>= 1;
-	int temp = r;
+void lsr(int *r) {
+	*r >>= 1;
+	int temp = *r;
 	setflags(temp);
 }
 
-void lsl(Registers r) {
-	r <<= 1;
-	int temp = r;
+void lsl(int *r) {
+	*r <<= 1;
+	int temp = *r;
 	setflags(temp);
 }
 
-void calc(Registers r, Operators op) {
+void calc(int *r, Operators op) {
 	int temp;
 	switch (op) { 
-		case ADD: {temp = r + memory[regPC+1]; break;}
-		case SUB: {temp = r - memory[regPC+1]; break;}
-		case MUL: {temp = r * memory[regPC+1]; break;}
-		case DIV: {temp = r / memory[regPC+1]; break;}
+		case ADD: {temp = *r + memory[regPC+1]; break;}
+		case SUB: {temp = *r - memory[regPC+1]; break;}
+		case MUL: {temp = *r * memory[regPC+1]; break;}
+		case DIV: {temp = *r / memory[regPC+1]; break;}
 	}
 	setflags(temp);
-	r = temp;
+	*r = temp;
 	regPC++;
+}
+
+void branch() { /* r must only be one of the flags in the CC register */
+	regPC++;
+	regPC = memory[regPC];
 }
 
 /* flags should change on certain instructions now. */
@@ -187,34 +191,34 @@ void eval(char instruction){
 			break;
 		}
 		case ADDA: {
-			calc(regA, ADD);
+			calc(&regA, ADD);
 			break;
 		}
 		case ADDB: {
-			calc(regB, ADD);
+			calc(&regB, ADD);
 			break;
 		}
 		case SUBA: {
-			calc(regA, SUB);
+			calc(&regA, SUB);
 			break;
 		}
 		case SUBB: {
-			calc(regB, SUB);
+			calc(&regB, SUB);
 			break;
 		}
 		case MULA: {
-			calc(regA, MUL);
+			calc(&regA, MUL);
 		}
 		case MULB: {
-			calc(regB, MUL);
+			calc(&regB, MUL);
 			break;
 		}
 		case DIVA: {
-			calc(regA, DIV);
+			calc(&regA, DIV);
 			break;
 		}
 		case DIVB: {
-			calc(regB, DIV);
+			calc(&regB, DIV);
 			break;
 		}
 		case CMPA: {
@@ -234,25 +238,24 @@ void eval(char instruction){
 			break;
 		}
 		case BRA: {
-			regPC++;
-			regPC = memory[regPC];
+			branch();
 			break;
 		}
 		/* Some branches here to implement! */
 		case CLRA: {
-			clr(regA);
+			clr(&regA);
 			break;
 		}
 		case CLRB: {
-			clr(regB);
+			clr(&regB);
 			break;
 		}
 		case CLRX: {
-			clr(regX);
+			clr(&regX);
 			break;
 		}
 		case CLRY: {
-			clr(regY);
+			clr(&regY);
 			break;
 		}
 		case BITA: {
@@ -264,63 +267,63 @@ void eval(char instruction){
 			break;
 		}
 		case INCA: {
-			inc(regA);
+			inc(&regA);
 			break;
 		}
 		case INCB: {
-			inc(regB);
+			inc(&regB);
 			break;
 		}
 		case INCX: {
-			inc(regX);
+			inc(&regX);
 			break;
 		}
 		case INCY: {
-			inc(regY);
+			inc(&regY);
 			break;
 		}
 		case LSRA: {
-			lsr(regA);
+			lsr(&regA);
 			break;
 		}
 		case LSRB: {
-			lsr(regB);
+			lsr(&regB);
 			break;
 		}
 		case LSLA: {
-			lsl(regA);
+			lsl(&regA);
 			break;
 		}
 		case LSLB: {
-			lsl(regB);
+			lsl(&regB);
 			break;
 		}
 		case LDA: {
-			load(regA);
+			load(&regA);
 			break;
 		}
 		case LDB: {
-			load(regB);
+			load(&regB);
 			break;
 		}
 		case LDX: {
-			load(regX);
+			load(&regX);
 			break;
 		}
 		case LDY: {
-			load(regY);
+			load(&regY);
 			break;
 		}
 		case LDCC: {
-			load(regCC);
+			load(&regCC);
 			break;
 		}
 		case ANDA: {
-			and(regA);
+			and(&regA);
 			break;
 		}
 		case ANDB: {
-			and(regB);
+			and(&regB);
 			break;
 		}
 		case STA: {
