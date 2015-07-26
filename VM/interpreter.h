@@ -70,10 +70,10 @@ typedef enum {
 
 
 typedef enum {
-    A, B,         
+    A, B,
     X, Y,
     SP,PC,CC
-} Registers; 
+} Registers;
 
 typedef enum {
   ADD, SUB, MUL, DIV
@@ -89,7 +89,7 @@ void clr(int *r);
 void inc(int *r);
 void load(int *r);
 void store(Registers r);
-void bit(Registers r); 
+void bit(Registers r);
 void lsr(int *r);
 void lsl(int *r);
 void calc(int *r, Operators op);
