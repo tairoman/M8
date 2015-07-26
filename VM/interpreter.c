@@ -47,7 +47,7 @@ int registers[6];
 int running = 1;
 
 
-void printregisters(){
+void printregisters() {
     printf("Registers:\n");
     printf("A : %d\n", regA);
     printf("B : %d\n", regB);
@@ -58,7 +58,7 @@ void printregisters(){
     printf("CC : %d\n", regCC);
 }
 
-void printflags(){
+void printflags() {
     printf("Flags:\n");
     printf("C : %d\n", C);
     printf("V : %d\n", V);
@@ -75,26 +75,25 @@ void printstate() {
 void setflags(int num) {
 	if (num < 0 || num > 255) {
 		C_ENABLE;
-	}
-	else {
+	} else {
 		C_DISABLE;
 	}
+
 	if (num < -128 || num > 127) { /* Unsure if these are the limits for a signed char. Check out. */
 		V_ENABLE;
-	}
-	else {
+	} else {
 		V_DISABLE;
 	}
+
 	if (num < 0) {
 		N_ENABLE;
-	}
-	else {
+	} else {
 		N_DISABLE;
 	}
+
 	if (!num) {
 		Z_ENABLE;
-	}
-	else {
+	} else {
 		Z_DISABLE;
 	}
 }
@@ -168,8 +167,8 @@ void branch() { /* r must only be one of the flags in the CC register */
 }
 
 /* flags should change on certain instructions now. */
-void eval(char instruction){
-	switch (instruction){
+void eval(char instruction) {
+	switch (instruction) {
 		case NOP: break;
 		case PSH: {
 			regSP++;
@@ -362,7 +361,7 @@ void eval(char instruction){
 }
 
 
-int main(){
+int main() {
 	while (running) {
 		eval(memory[regPC]);
 		printstate();
