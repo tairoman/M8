@@ -66,7 +66,7 @@ typedef enum {
   STX,
   STY,
   STOP,
-} Instuctions;
+} Instructions;
 
 
 typedef enum {
