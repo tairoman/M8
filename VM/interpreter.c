@@ -49,21 +49,21 @@ int running = 1;
 
 void printregisters() {
     printf("Registers:\n");
-    printf("A : %d\n", regA);
-    printf("B : %d\n", regB);
-    printf("X : %d\n", regX);
-    printf("Y : %d\n", regY);
-    printf("SP : %d\n", regSP);
-    printf("PC : %d\n", regPC);
-    printf("CC : %d\n", regCC);
+    printf("A: %d\n", regA);
+    printf("B: %d\n", regB);
+    printf("X: %d\n", regX);
+    printf("Y: %d\n", regY);
+    printf("SP: %d\n", regSP);
+    printf("PC: %d\n", regPC);
+    printf("CC: %d\n", regCC);
 }
 
 void printflags() {
     printf("Flags:\n");
-    printf("C : %d\n", C);
-    printf("V : %d\n", V);
-    printf("Z : %d\n", Z);
-    printf("N : %d\n", N);
+    printf("C: %d\n", C);
+    printf("V: %d\n", V);
+    printf("Z: %d\n", Z);
+    printf("N: %d\n", N);
 }
 
 void printstate() {
