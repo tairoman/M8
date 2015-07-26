@@ -356,5 +356,5 @@ int main(){
 		eval(memory[regPC]);
 		printstate();
 	}
-  	return 0;
+	return 0;
 }
