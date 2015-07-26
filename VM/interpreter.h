@@ -70,13 +70,20 @@ typedef enum {
 
 
 typedef enum {
-    A, B,
-    X, Y,
-    SP,PC,CC
+    A,
+    B,
+    X,
+    Y,
+    SP,
+    PC,
+    CC
 } Registers;
 
 typedef enum {
-  ADD, SUB, MUL, DIV
+  ADD,
+  SUB,
+  MUL,
+  DIV
 } Operators;
 
 void setflags(int num);
