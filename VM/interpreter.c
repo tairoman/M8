@@ -26,7 +26,7 @@
 #define Z ((regCC & Z_MASK) >> 2)
 #define N ((regCC & N_MASK) >> 3)
 
-#define ENABLE(n)  (regCC |=  1<< n)
+#define ENABLE(n)  (regCC |= 1 << n)
 #define DISABLE(n) (regCC &= ~(1 << n))
 
 #define C_ENABLE  ENABLE(0)
@@ -48,11 +48,22 @@ int running = 1;
 
 
 void printregisters(){
-	printf("\n Registers:\n A  : %d\n B  : %d\n X  : %d\n Y  : %d\n SP : %d\n PC : %d\n CC : %d\n",regA,regB,regX,regY,regSP,regPC, regCC);
+    printf("Registers:\n");
+    printf("A : %d\n", regA);
+    printf("B : %d\n", regB);
+    printf("X : %d\n", regX);
+    printf("Y : %d\n", regY);
+    printf("SP : %d\n", regSP);
+    printf("PC : %d\n", regPC);
+    printf("CC : %d\n", regCC);
 }
 
 void printflags(){
-	printf("\n Flags: \n C : %d\n V : %d\n Z : %d\n N : %d\n",C,V,Z,N);
+    printf("Flags:\n");
+    printf("C : %d\n", C);
+    printf("V : %d\n", V);
+    printf("Z : %d\n", Z);
+    printf("N : %d\n", N);
 }
 
 void printstate() {
