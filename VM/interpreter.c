@@ -26,7 +26,7 @@
 #define Z ((regCC & Z_MASK) >> 2)
 #define N ((regCC & N_MASK) >> 3)
 
-#define ENABLE(n)  (regCC |=  1<< n)
+#define ENABLE(n)  (regCC |= 1 << n)
 #define DISABLE(n) (regCC &= ~(1 << n))
 
 #define C_ENABLE  ENABLE(0)
@@ -47,12 +47,23 @@ int registers[6];
 int running = 1;
 
 
-void printregisters(){
-	printf("\n Registers:\n A  : %d\n B  : %d\n X  : %d\n Y  : %d\n SP : %d\n PC : %d\n CC : %d\n",regA,regB,regX,regY,regSP,regPC, regCC);
+void printregisters() {
+    printf("Registers:\n");
+    printf("A: %d\n", regA);
+    printf("B: %d\n", regB);
+    printf("X: %d\n", regX);
+    printf("Y: %d\n", regY);
+    printf("SP: %d\n", regSP);
+    printf("PC: %d\n", regPC);
+    printf("CC: %d\n", regCC);
 }
 
-void printflags(){
-	printf("\n Flags: \n C : %d\n V : %d\n Z : %d\n N : %d\n",C,V,Z,N);
+void printflags() {
+    printf("Flags:\n");
+    printf("C: %d\n", C);
+    printf("V: %d\n", V);
+    printf("Z: %d\n", Z);
+    printf("N: %d\n", N);
 }
 
 void printstate() {
@@ -64,26 +75,25 @@ void printstate() {
 void setflags(int num) {
 	if (num < 0 || num > 255) {
 		C_ENABLE;
-	}
-	else {
+	} else {
 		C_DISABLE;
 	}
+
 	if (num < -128 || num > 127) { /* Unsure if these are the limits for a signed char. Check out. */
 		V_ENABLE;
-	}
-	else {
+	} else {
 		V_DISABLE;
 	}
+
 	if (num < 0) {
 		N_ENABLE;
-	}
-	else {
+	} else {
 		N_DISABLE;
 	}
+
 	if (!num) {
 		Z_ENABLE;
-	}
-	else {
+	} else {
 		Z_DISABLE;
 	}
 }
@@ -157,8 +167,8 @@ void branch() { /* r must only be one of the flags in the CC register */
 }
 
 /* flags should change on certain instructions now. */
-void eval(char instruction){
-	switch (instruction){
+void eval(char instruction) {
+	switch (instruction) {
 		case NOP: break;
 		case PSH: {
 			regSP++;
@@ -351,7 +361,7 @@ void eval(char instruction){
 }
 
 
-int main(){
+int main() {
 	while (running) {
 		eval(memory[regPC]);
 		printstate();
