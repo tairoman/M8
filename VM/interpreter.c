@@ -140,7 +140,7 @@ void lsl(int *r) {
 
 void calc(int *r, Operators op) {
 	int temp;
-	switch (op) { 
+	switch (op) {
 		case ADD: {temp = *r + memory[regPC+1]; break;}
 		case SUB: {temp = *r - memory[regPC+1]; break;}
 		case MUL: {temp = *r * memory[regPC+1]; break;}
@@ -164,7 +164,7 @@ void eval(char instruction){
 			regSP++;
 			regPC++;
 			memory[regSP] = memory[regPC];
-			break; 
+			break;
 		}
 		case PULL: {
 			regPC++;
@@ -227,11 +227,11 @@ void eval(char instruction){
 		}
 		case CMPB: {
 			cmp(regB);
-			break;			
+			break;
 		}
 		case CMPX: {
 			cmp(regX);
-			break;			
+			break;
 		}
 		case CMPY: {
 			cmp(regY);
@@ -356,5 +356,5 @@ int main(){
 		eval(memory[regPC]);
 		printstate();
 	}
-  	return 0;
+	return 0;
 }
