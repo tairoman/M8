@@ -1,4 +1,5 @@
-
+#ifndef M8_INTERPRETER_H
+#define M8_INTERPRETER_H
 /* ------------------------------------------------------------------ */
 /* Preprocessor stuff for assembler. Move to another file eventually. */
 struct Label {
@@ -7,15 +8,15 @@ struct Label {
 };
 
 struct AsmDirectives {
-  char org;                 /* Points to where the program begins. It shows where to put the instructions in memory. */
+  char org;                 /* Points to where the program begins. It shows where to put the M8_Instructions in memory. */
   struct Label labels[256]; /* Labels are pointers that points to certain places in memory. */
 };
 
 /* ------------------------------------------------------------------ */
 
-/* - probably needs more branch instructions
-   - TODO: describe instructions
-   - TODO: test all instructions!
+/* - probably needs more branch M8_Instructions
+   - TODO: describe M8_Instructions
+   - TODO: test all M8_Instructions!
 */
 typedef enum {
   NOP,
@@ -66,7 +67,7 @@ typedef enum {
   STX,
   STY,
   STOP,
-} Instructions;
+} M8_Instructions;
 
 
 typedef enum {
@@ -77,26 +78,28 @@ typedef enum {
     SP,
     PC,
     CC
-} Registers;
+} M8_Registers;
 
 typedef enum {
   ADD,
   SUB,
   MUL,
   DIV
-} Operators;
+} M8_Operators;
 
-void setflags(int num);
-void printregisters(void);
-void printflags(void);
-void printstate(void);
-void eval(char instruction);
-void cmp(Registers r);
-void clr(int *r);
-void inc(int *r);
-void load(int *r);
-void store(Registers r);
-void bit(Registers r);
-void lsr(int *r);
-void lsl(int *r);
-void calc(int *r, Operators op);
+void M8_setflags(int num);
+void M8_printM8_Registers(void);
+void M8_printflags(void);
+void M8_printstate(void);
+void M8_eval(char instruction);
+void M8_cmp(M8_Registers r);
+void M8_clr(int *r);
+void M8_inc(int *r);
+void M8_load(int *r);
+void M8_store(M8_Registers r);
+void M8_bit(M8_Registers r);
+void M8_lsr(int *r);
+void M8_lsl(int *r);
+void M8_calc(int *r, M8_Operators op);
+
+#endif
