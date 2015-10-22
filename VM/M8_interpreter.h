@@ -90,7 +90,7 @@ typedef enum {
 } M8_Operators;
 
 uint8_t* M8_getregister(M8_enum_Registers r_enum);
-void M8_setflags(uint16_t num);
+void M8_setflags(int16_t num);
 void M8_printregisters(void);
 void M8_printflags(void);
 void M8_printstate(void);

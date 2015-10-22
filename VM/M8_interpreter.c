@@ -90,14 +90,14 @@ void M8_printstate() {
   M8_printflags();
 }
 
-void M8_setflags(uint16_t num) {
+void M8_setflags(int16_t num) {
   if (num < 0 || num > 255) {
     M8_ENABLE_C;
   } else {
     M8_DISABLE_C;
   }
 
-  /* V and N-flags now working at the moment due to unsigned integer. */
+  /* V not working at the moment */
   if (num < M8_SIGNED_MIN || num >= M8_SIGNED_MAX) {
     M8_ENABLE_V;
   } else {
@@ -118,7 +118,7 @@ void M8_setflags(uint16_t num) {
 }
 
 void M8_cmp(uint8_t r) {
-  uint16_t temp = r - memory[M8_REG_PC+1];
+  int16_t temp = r - memory[M8_REG_PC+1];
   M8_setflags(temp);
   M8_REG_PC++;
 }
@@ -130,7 +130,7 @@ void M8_clr(uint8_t *r) {
 
 void M8_inc(uint8_t *r) {
   *r++;
-  uint16_t temp = *r;
+  int16_t temp = *r;
   M8_setflags(temp);
 }
 
@@ -150,20 +150,20 @@ void M8_store(uint8_t r) {
 }
 
 void M8_bit(uint8_t r) {
-  uint16_t temp = r & memory[M8_REG_PC+1];
+  int16_t temp = r & memory[M8_REG_PC+1];
   M8_setflags(temp);
   M8_REG_PC++;
 }
 
 void M8_lsr(uint8_t *r) {
   *r >>= 1;
-  int temp = *r;
+  int16_t temp = *r;
   M8_setflags(temp);
 }
 
 void M8_lsl(uint8_t *r) {
   *r <<= 1;
-  int temp = *r;
+  int16_t temp = *r;
   M8_setflags(temp);
 }
 
