@@ -43,9 +43,8 @@
 
 #define M8_BIT_SEVEN(x) (x>>7 & 1)
 
-//test
-#define M8_SIGNED_MIN 128
-#define M8_SIGNED_MAX 255
+#define M8__MIN 0
+#define M8__MAX 255
 
 M8_Registers regs;
 uint8_t memory[M8_MEMORY_SIZE] = {LDA, 6, LDB, 4, TRF, A, B, CLRA, CMPB, 7, STOP};
@@ -92,7 +91,7 @@ void M8_printstate() {
 }
 
 void M8_setflags(int16_t result, uint8_t op1, uint8_t op2) {
-  if (result < 0 || result > 255) {
+  if (result < M8_MIN || result > M8_MAX) {
     M8_ENABLE_C;
   } else {
     M8_DISABLE_C;
@@ -100,13 +99,13 @@ void M8_setflags(int16_t result, uint8_t op1, uint8_t op2) {
 
   if (!M8_BIT_SEVEN(result) && M8_BIT_SEVEN(op1) && M8_BIT_SEVEN(op2) ||
       M8_BIT_SEVEN(result) && !M8_BIT_SEVEN(op1) && !M8_BIT_SEVEN(op2) ||
-      result < 0 || result > 255){
+      result < M8_MIN || result > M8_MAX){
     M8_ENABLE_V;
   } else {
     M8_DISABLE_V;
   }
 
-  if (result < 0) {
+  if (result < M8_MIN) {
     M8_ENABLE_N;
   } else {
     M8_DISABLE_N;
