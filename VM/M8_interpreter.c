@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 #include "M8_interpreter.h"
 
@@ -182,11 +181,6 @@ void M8_calc(uint8_t *r, M8_Operators op) {
   }
 }
 
-/*void M8_setflags(uint8_t temp){
-  *r = temp;
-  M8_REG_PC++;
-}
-*/
 void M8_branch() {
   M8_REG_PC++;
   M8_REG_PC = memory[M8_REG_PC];
