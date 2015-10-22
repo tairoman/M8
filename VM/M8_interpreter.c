@@ -42,6 +42,8 @@
 #define M8_ENABLE_N  M8_ENABLE(3)
 #define M8_DISABLE_N M8_DISABLE(3)
 
+#define M8_BIT_SEVEN(x) (x>>7 & 1)
+
 //test
 #define M8_SIGNED_MIN 128
 #define M8_SIGNED_MAX 255
@@ -90,27 +92,28 @@ void M8_printstate() {
   M8_printflags();
 }
 
-void M8_setflags(int16_t num) {
-  if (num < 0 || num > 255) {
+void M8_setflags(int16_t result, uint8_t op1, uint8_t op2) {
+  if (result < 0 || result > 255) {
     M8_ENABLE_C;
   } else {
     M8_DISABLE_C;
   }
 
-  /* V not working at the moment */
-  if (num < M8_SIGNED_MIN || num >= M8_SIGNED_MAX) {
+  if (!M8_BIT_SEVEN(result) && M8_BIT_SEVEN(op1) && M8_BIT_SEVEN(op2) ||
+      M8_BIT_SEVEN(result) && !M8_BIT_SEVEN(op1) && !M8_BIT_SEVEN(op2) ||
+      result < 0 || result > 255){
     M8_ENABLE_V;
   } else {
     M8_DISABLE_V;
   }
 
-  if (num < 0) {
+  if (result < 0) {
     M8_ENABLE_N;
   } else {
     M8_DISABLE_N;
   }
 
-  if (!num) {
+  if (!result) { /* == 0 */
     M8_ENABLE_Z;
   } else {
     M8_DISABLE_Z;
@@ -118,8 +121,9 @@ void M8_setflags(int16_t num) {
 }
 
 void M8_cmp(uint8_t r) {
-  int16_t temp = r - memory[M8_REG_PC+1];
-  M8_setflags(temp);
+  uint8_t op = memory[M8_REG_PC+1];
+  int16_t temp = r - op;
+  M8_setflags(temp, r, op);
   M8_REG_PC++;
 }
 
@@ -131,7 +135,7 @@ void M8_clr(uint8_t *r) {
 void M8_inc(uint8_t *r) {
   *r++;
   int16_t temp = *r;
-  M8_setflags(temp);
+  M8_setflags(temp, *r, 1);
 }
 
 void M8_load(uint8_t *r) {
@@ -150,21 +154,22 @@ void M8_store(uint8_t r) {
 }
 
 void M8_bit(uint8_t r) {
-  int16_t temp = r & memory[M8_REG_PC+1];
-  M8_setflags(temp);
+  uint8_t op = memory[M8_REG_PC+1];
+  int16_t temp = r & op;
+  M8_setflags(temp, r, op);
   M8_REG_PC++;
 }
 
 void M8_lsr(uint8_t *r) {
   *r >>= 1;
   int16_t temp = *r;
-  M8_setflags(temp);
+  M8_setflags(temp, *r, 1); /* Is 1 correct? */
 }
 
 void M8_lsl(uint8_t *r) {
   *r <<= 1;
   int16_t temp = *r;
-  M8_setflags(temp);
+  M8_setflags(temp, *r, 1); /* Is 1 correct? */
 }
 
 void M8_calc(uint8_t *r, M8_Operators op) {
@@ -379,7 +384,6 @@ void M8_eval(char instruction) {
   }
   M8_REG_PC++;
 }
-
 
 int main() {
   while (running) {
