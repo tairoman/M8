@@ -29,10 +29,21 @@ typedef enum {
   CMPB,
   CMPX,
   CMPY,
-  BRA,
-  BNE,
-  BEQ,
-  BGE,
+  BRA, /* Branch always */
+  BCC, /* Branch on C=0 */
+  BCS, /* Branch on C=1 */
+  BGT, /* Branch on greater than zero ((N xor V) or Z) = 0 */
+  BNE, /* Branch on not equal to zero (Z=0)*/
+  BEQ, /* Branch on equal to zero (Z=1)*/
+  BGE, /* Branch on greater than or equal to zero (N xor V)*/
+  BHI, /* Branch if higher than zero (Z or C) = 0 */
+  BLE, /* Branch on less than or equal to zero ((N xor Z) or Z) = 0 */
+  BLS, /* Branch on lower or same (C or Z) = 1 */
+  BLT, /* Branch on less than zero (N xor V) = 1 */
+  BMI, /* Branch on minus (N=1) */
+  BPL, /* Branch on plus (N=0) */
+  BVC, /* Branch if no overflow (V=0) */
+  BVS, /* Branch if overflow (V=1) */
   CLRA,
   CLRB,
   CLRX,

@@ -43,8 +43,8 @@
 
 #define M8_BIT_SEVEN(x) (x>>7 & 1)
 
-#define M8__MIN 0
-#define M8__MAX 255
+#define M8_MIN 0
+#define M8_MAX 255
 
 M8_Registers regs;
 uint8_t memory[M8_MEMORY_SIZE] = {LDA, 6, LDB, 4, TRF, A, B, CLRA, CMPB, 7, STOP};
