@@ -1,7 +1,7 @@
-#include <stdint.h>
-
 #ifndef M8_INTERPRETER_H
 #define M8_INTERPRETER_H
+
+#include <stdint.h>
 
 /* - probably needs more branch M8_Instructions
    - TODO: describe M8_Instructions
