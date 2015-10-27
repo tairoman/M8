@@ -47,11 +47,11 @@
 #define M8_MAX 255
 
 M8_Registers regs;
-uint8_t memory[M8_MEMORY_SIZE] = {LDA, 6, LDB, 4, TRF, A, B, CLRA, CMPB, 7, STOP};
+uint8_t memory[M8_MEMORY_SIZE] = {LDA, 6, LDB, 4, NOP, TRF, A, B, CLRA, CMPB, 7, STOP};
 int running = 1;
 
 uint8_t* M8_getregister(M8_enum_Registers r_enum){
-  uint8_t* r;
+  uint8_t* r = NULL;
   switch (r_enum) {
     case A:  r=&M8_REG_A;  break;
     case B:  r=&M8_REG_B;  break;
@@ -171,13 +171,15 @@ void M8_lsl(uint8_t *r) {
 }
 
 void M8_calc(uint8_t *r, M8_Operators op) {
-  uint16_t temp;
-  switch (op) {
-    case ADD: temp = *r + memory[M8_REG_PC+1]; break;
-    case SUB: temp = *r - memory[M8_REG_PC+1]; break;
-    case MUL: temp = *r * memory[M8_REG_PC+1]; break;
-    case DIV: temp = *r / memory[M8_REG_PC+1]; break;
-  }
+    int16_t temp = 1;
+    switch (op) {
+        case ADD: temp = *r + memory[M8_REG_PC+1]; break;
+        case SUB: temp = *r - memory[M8_REG_PC+1]; break;
+        case MUL: temp = *r * memory[M8_REG_PC+1]; break;
+        case DIV: temp = *r / memory[M8_REG_PC+1]; break;
+    }
+    M8_setflags(temp, *r, memory[M8_REG_PC+1]);
+    *r = (uint8_t) temp;
 }
 
 void M8_branch() {
