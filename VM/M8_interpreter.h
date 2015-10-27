@@ -11,75 +11,75 @@
    - TODO: test all M8_Instructions!
 */
 typedef enum {
-  NOP,
-  PSH,
-  PULL,
-  TRF,
-  JSR,
-  RTS,
-  ADDA,
-  ADDB,
-  SUBA,
-  SUBB,
-  MULA,
-  MULB,
-  DIVA,
-  DIVB,
-  CMPA,
-  CMPB,
-  CMPX,
-  CMPY,
-  BRA, /* Branch always */
-  BCC, /* Branch on C=0 */
-  BCS, /* Branch on C=1 */
-  BGT, /* Branch on greater than zero ((N xor V) or Z) = 0 */
-  BNE, /* Branch on not equal to zero (Z=0)*/
-  BEQ, /* Branch on equal to zero (Z=1)*/
-  BGE, /* Branch on greater than or equal to zero (N xor V)*/
-  BHI, /* Branch if higher than zero (Z or C) = 0 */
-  BLE, /* Branch on less than or equal to zero ((N xor Z) or Z) = 0 */
-  BLS, /* Branch on lower or same (C or Z) = 1 */
-  BLT, /* Branch on less than zero (N xor V) = 1 */
-  BMI, /* Branch on minus (N=1) */
-  BPL, /* Branch on plus (N=0) */
-  BVC, /* Branch if no overflow (V=0) */
-  BVS, /* Branch if overflow (V=1) */
-  CLRA,
-  CLRB,
-  CLRX,
-  CLRY,
-  BITA,
-  BITB,
-  INCA,
-  INCB,
-  INCX,
-  INCY,
-  LSRA,
-  LSRB,
-  LSLA,
-  LSLB,
-  LDA,
-  LDB,
-  LDX,
-  LDY,
-  LDCC,
-  ANDA,
-  ANDB,
-  STA,
-  STB,
-  STX,
-  STY,
-  STOP,
+    NOP,
+    PSH,
+    PULL,
+    TRF,
+    JSR,
+    RTS,
+    ADDA,
+    ADDB,
+    SUBA,
+    SUBB,
+    MULA,
+    MULB,
+    DIVA,
+    DIVB,
+    CMPA,
+    CMPB,
+    CMPX,
+    CMPY,
+    BRA, /* Branch always */
+    BCC, /* Branch on C=0 */
+    BCS, /* Branch on C=1 */
+    BGT, /* Branch on greater than zero ((N xor V) or Z) = 0 */
+    BNE, /* Branch on not equal to zero (Z=0)*/
+    BEQ, /* Branch on equal to zero (Z=1)*/
+    BGE, /* Branch on greater than or equal to zero (N xor V)*/
+    BHI, /* Branch if higher than zero (Z or C) = 0 */
+    BLE, /* Branch on less than or equal to zero ((N xor Z) or Z) = 0 */
+    BLS, /* Branch on lower or same (C or Z) = 1 */
+    BLT, /* Branch on less than zero (N xor V) = 1 */
+    BMI, /* Branch on minus (N=1) */
+    BPL, /* Branch on plus (N=0) */
+    BVC, /* Branch if no overflow (V=0) */
+    BVS, /* Branch if overflow (V=1) */
+    CLRA,
+    CLRB,
+    CLRX,
+    CLRY,
+    BITA,
+    BITB,
+    INCA,
+    INCB,
+    INCX,
+    INCY,
+    LSRA,
+    LSRB,
+    LSLA,
+    LSLB,
+    LDA,
+    LDB,
+    LDX,
+    LDY,
+    LDCC,
+    ANDA,
+    ANDB,
+    STA,
+    STB,
+    STX,
+    STY,
+    STOP,
 } M8_Instructions;
 
 typedef struct  {
-  uint8_t A;
-  uint8_t B;
-  uint8_t X;
-  uint8_t Y;
-  uint8_t SP;
-  uint8_t PC;
-  uint8_t CC;
+    uint8_t A;
+    uint8_t B;
+    uint8_t X;
+    uint8_t Y;
+    uint8_t SP;
+    uint8_t PC;
+    uint8_t CC;
 } M8_Registers;
 
 
@@ -94,10 +94,10 @@ typedef enum {
 } M8_enum_Registers;
 
 typedef enum {
-  ADD,
-  SUB,
-  MUL,
-  DIV
+    ADD,
+    SUB,
+    MUL,
+    DIV
 } M8_Operators;
 
 uint8_t* M8_getregister(M8_enum_Registers r_enum);

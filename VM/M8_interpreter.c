@@ -51,17 +51,17 @@ uint8_t memory[M8_MEMORY_SIZE] = {LDA, 6, LDB, 4, NOP, TRF, A, B, CLRA, CMPB, 7,
 int running = 1;
 
 uint8_t* M8_getregister(M8_enum_Registers r_enum){
-  uint8_t* r = NULL;
-  switch (r_enum) {
-    case A:  r=&M8_REG_A;  break;
-    case B:  r=&M8_REG_B;  break;
-    case X:  r=&M8_REG_X;  break;
-    case Y:  r=&M8_REG_Y;  break;
-    case SP: r=&M8_REG_SP; break;
-    case PC: r=&M8_REG_PC; break;
-    case CC: r=&M8_REG_CC; break;
-  }
-  return r;
+    uint8_t* r = NULL;
+    switch (r_enum) {
+        case A:  r=&M8_REG_A;  break;
+        case B:  r=&M8_REG_B;  break;
+        case X:  r=&M8_REG_X;  break;
+        case Y:  r=&M8_REG_Y;  break;
+        case SP: r=&M8_REG_SP; break;
+        case PC: r=&M8_REG_PC; break;
+        case CC: r=&M8_REG_CC; break;
+    }
+    return r;
 }
 
 
@@ -85,90 +85,89 @@ void M8_printflags(void) {
 }
 
 void M8_printstate(void) {
-  printf("------------------");
-  M8_printregisters();
-  M8_printflags();
+    printf("------------------");
+    M8_printregisters();
+    M8_printflags();
 }
 
 void M8_setflags(int16_t result, uint8_t op1, uint8_t op2) {
-  if (result < M8_MIN || result > M8_MAX) {
-    M8_ENABLE_C;
-  } else {
+    if (result < M8_MIN || result > M8_MAX) {
+        M8_ENABLE_C;
+    } else {
+        M8_DISABLE_C;
+    }
 
-    M8_DISABLE_C;
-  }
+    if (!M8_BIT_SEVEN(result) && M8_BIT_SEVEN(op1) && M8_BIT_SEVEN(op2) ||
+        M8_BIT_SEVEN(result) && !M8_BIT_SEVEN(op1) && !M8_BIT_SEVEN(op2) ||
+        result < M8_MIN || result > M8_MAX){
+        M8_ENABLE_V;
+    } else {
+        M8_DISABLE_V;
+    }
 
-  if (!M8_BIT_SEVEN(result) && M8_BIT_SEVEN(op1) && M8_BIT_SEVEN(op2) ||
-      M8_BIT_SEVEN(result) && !M8_BIT_SEVEN(op1) && !M8_BIT_SEVEN(op2) ||
-      result < M8_MIN || result > M8_MAX){
-    M8_ENABLE_V;
-  } else {
-    M8_DISABLE_V;
-  }
+    if (result < M8_MIN) {
+        M8_ENABLE_N;
+    } else {
+        M8_DISABLE_N;
+    }
 
-  if (result < M8_MIN) {
-    M8_ENABLE_N;
-  } else {
-    M8_DISABLE_N;
-  }
-
-  if (!result) { /* == 0 */
-    M8_ENABLE_Z;
-  } else {
-    M8_DISABLE_Z;
-  }
+    if (!result) { /* == 0 */
+        M8_ENABLE_Z;
+    } else {
+        M8_DISABLE_Z;
+    }
 }
 
 void M8_cmp(uint8_t r) {
-  uint8_t op = memory[M8_REG_PC+1];
-  int16_t temp = r - op;
-  M8_setflags(temp, r, op);
-  M8_REG_PC++;
+    uint8_t op = memory[M8_REG_PC+1];
+    int16_t temp = r - op;
+    M8_setflags(temp, r, op);
+    M8_REG_PC++;
 }
 
 void M8_clr(uint8_t *r) {
-  *r = 0;
-  M8_ENABLE_Z;
+    *r = 0;
+    M8_ENABLE_Z;
 }
 
 void M8_inc(uint8_t *r) {
-  (*r)++;
-  int16_t temp = *r;
-  M8_setflags(temp, *r, 1);
+    (*r)++;
+    int16_t temp = *r;
+    M8_setflags(temp, *r, 1);
 }
 
 void M8_load(uint8_t *r) {
-  M8_REG_PC++;
-  *r = memory[M8_REG_PC];
+    M8_REG_PC++;
+    *r = memory[M8_REG_PC];
 }
 
 void M8_and(uint8_t *r) {
-  M8_REG_PC++;
-  *r &= memory[M8_REG_PC];
+    M8_REG_PC++;
+    *r &= memory[M8_REG_PC];
 }
 
 void M8_store(uint8_t r) {
-  M8_REG_PC++;
-  memory[M8_REG_PC] = r;
+    M8_REG_PC++;
+    memory[M8_REG_PC] = r;
 }
 
 void M8_bit(uint8_t r) {
-  uint8_t op = memory[M8_REG_PC+1];
-  int16_t temp = r & op;
-  M8_setflags(temp, r, op);
-  M8_REG_PC++;
+    uint8_t op = memory[M8_REG_PC+1];
+    int16_t temp = r & op;
+    M8_setflags(temp, r, op);
+    M8_REG_PC++;
 }
 
 void M8_lsr(uint8_t *r) {
-  *r >>= 1;
-  int16_t temp = *r;
-  M8_setflags(temp, *r, 1); /* Is 1 correct? */
+    *r >>= 1;
+    int16_t temp = *r;
+    M8_setflags(temp, *r, 1); /* Is 1 correct? */
 }
 
 void M8_lsl(uint8_t *r) {
-  *r <<= 1;
-  int16_t temp = *r;
-  M8_setflags(temp, *r, 1); /* Is 1 correct? */
+    *r <<= 1;
+    int16_t temp = *r;
+    M8_setflags(temp, *r, 1); /* Is 1 correct? */
 }
 
 void M8_calc(uint8_t *r, M8_Operators op) {
@@ -184,209 +183,210 @@ void M8_calc(uint8_t *r, M8_Operators op) {
 }
 
 void M8_branch() {
-  M8_REG_PC++;
-  M8_REG_PC = memory[M8_REG_PC];
+    M8_REG_PC++;
+    M8_REG_PC = memory[M8_REG_PC];
 }
 
 void M8_eval(char instruction) {
-  switch (instruction) {
-    case NOP: break;
+    switch (instruction) {
 
-    case PSH:
-      M8_REG_SP++;
-      M8_REG_PC++;
-      memory[M8_REG_SP] = memory[M8_REG_PC];
-      break;
+        case NOP: break;
 
-    case PULL:
-      M8_REG_PC++;
-      M8_REG_SP--;
-      *M8_getregister(memory[M8_REG_PC]) = memory[M8_REG_SP];
-      break;
+        case PSH:
+            M8_REG_SP++;
+            M8_REG_PC++;
+            memory[M8_REG_SP] = memory[M8_REG_PC];
+            break;
 
-    case TRF:
-      *M8_getregister(memory[M8_REG_PC+2]) = *M8_getregister(memory[M8_REG_PC+1]);
-      M8_REG_PC += 2;
-      break;
+        case PULL:
+            M8_REG_PC++;
+            M8_REG_SP--;
+            *M8_getregister(memory[M8_REG_PC]) = memory[M8_REG_SP];
+            break;
 
-      case JSR:
-      M8_REG_SP++;
-      memory[M8_REG_SP] = M8_REG_PC;
-      /* Mer register som ska upp på stacken? */
-      M8_REG_PC++;
-      M8_REG_PC = memory[M8_REG_PC];
-      break;
+        case TRF:
+            *M8_getregister(memory[M8_REG_PC+2]) = *M8_getregister(memory[M8_REG_PC+1]);
+            M8_REG_PC += 2;
+            break;
 
-    case RTS:
-      M8_REG_SP--;
-      M8_REG_PC = memory[M8_REG_SP];
-      break;
+        case JSR:
+            M8_REG_SP++;
+            memory[M8_REG_SP] = M8_REG_PC;
+            /* Mer register som ska upp på stacken? */
+            M8_REG_PC++;
+            M8_REG_PC = memory[M8_REG_PC];
+            break;
 
-    case ADDA:
-      M8_calc(&M8_REG_A, ADD);
-      break;
+        case RTS:
+            M8_REG_SP--;
+            M8_REG_PC = memory[M8_REG_SP];
+            break;
 
-    case ADDB:
-      M8_calc(&M8_REG_B, ADD);
-      break;
+        case ADDA:
+            M8_calc(&M8_REG_A, ADD);
+            break;
 
-    case SUBA:
-      M8_calc(&M8_REG_A, SUB);
-      break;
+        case ADDB:
+            M8_calc(&M8_REG_B, ADD);
+            break;
 
-    case SUBB:
-      M8_calc(&M8_REG_B, SUB);
-      break;
+        case SUBA:
+            M8_calc(&M8_REG_A, SUB);
+            break;
 
-    case MULA:
-      M8_calc(&M8_REG_A, MUL);
+        case SUBB:
+            M8_calc(&M8_REG_B, SUB);
+            break;
 
-    case MULB:
-      M8_calc(&M8_REG_B, MUL);
-      break;
+        case MULA:
+            M8_calc(&M8_REG_A, MUL);
 
-    case DIVA:
-      M8_calc(&M8_REG_A, DIV);
-      break;
+        case MULB:
+            M8_calc(&M8_REG_B, MUL);
+            break;
 
-    case DIVB:
-      M8_calc(&M8_REG_B, DIV);
-      break;
+        case DIVA:
+            M8_calc(&M8_REG_A, DIV);
+            break;
 
-    case CMPA:
-      M8_cmp(M8_REG_A);
-      break;
+        case DIVB:
+            M8_calc(&M8_REG_B, DIV);
+            break;
 
-    case CMPB:
-      M8_cmp(M8_REG_B);
-      break;
+        case CMPA:
+            M8_cmp(M8_REG_A);
+            break;
 
-    case CMPX:
-      M8_cmp(M8_REG_X);
-      break;
+        case CMPB:
+            M8_cmp(M8_REG_B);
+            break;
 
-    case CMPY:
-      M8_cmp(M8_REG_Y);
-      break;
+        case CMPX:
+            M8_cmp(M8_REG_X);
+            break;
 
-    case BRA:
-      M8_branch();
-      break;
+        case CMPY:
+            M8_cmp(M8_REG_Y);
+            break;
 
-    /* Some M8_branches here to implement! */
-    case CLRA:
-      M8_clr(&M8_REG_A);
-      break;
+        case BRA:
+            M8_branch();
+            break;
 
-    case CLRB:
-      M8_clr(&M8_REG_B);
-      break;
+        /* Some M8_branches here to implement! */
+        case CLRA:
+            M8_clr(&M8_REG_A);
+            break;
 
-    case CLRX:
-      M8_clr(&M8_REG_X);
-      break;
+        case CLRB:
+            M8_clr(&M8_REG_B);
+            break;
 
-      case CLRY:
-      M8_clr(&M8_REG_Y);
-      break;
+        case CLRX:
+            M8_clr(&M8_REG_X);
+            break;
 
-    case BITA:
-      M8_bit(M8_REG_A);
-      break;
+        case CLRY:
+            M8_clr(&M8_REG_Y);
+            break;
 
-    case BITB:
-      M8_bit(M8_REG_B);
-      break;
+        case BITA:
+            M8_bit(M8_REG_A);
+            break;
 
-    case INCA:
-      M8_inc(&M8_REG_A);
-      break;
+        case BITB:
+            M8_bit(M8_REG_B);
+            break;
 
-    case INCB:
-      M8_inc(&M8_REG_B);
-      break;
+        case INCA:
+            M8_inc(&M8_REG_A);
+            break;
 
-    case INCX:
-      M8_inc(&M8_REG_X);
-      break;
+        case INCB:
+            M8_inc(&M8_REG_B);
+            break;
 
-    case INCY:
-      M8_inc(&M8_REG_Y);
-      break;
+        case INCX:
+            M8_inc(&M8_REG_X);
+            break;
 
-    case LSRA:
-      M8_lsr(&M8_REG_A);
-      break;
+        case INCY:
+            M8_inc(&M8_REG_Y);
+            break;
 
-    case LSRB:
-      M8_lsr(&M8_REG_B);
-      break;
+        case LSRA:
+            M8_lsr(&M8_REG_A);
+            break;
 
-    case LSLA:
-      M8_lsl(&M8_REG_A);
-      break;
+        case LSRB:
+            M8_lsr(&M8_REG_B);
+            break;
 
-    case LSLB:
-      M8_lsl(&M8_REG_B);
-      break;
+        case LSLA:
+            M8_lsl(&M8_REG_A);
+            break;
 
-    case LDA:
-      M8_load(&M8_REG_A);
-      break;
+        case LSLB:
+            M8_lsl(&M8_REG_B);
+            break;
 
-    case LDB:
-      M8_load(&M8_REG_B);
-      break;
+        case LDA:
+            M8_load(&M8_REG_A);
+            break;
 
-    case LDX:
-      M8_load(&M8_REG_X);
-      break;
+        case LDB:
+            M8_load(&M8_REG_B);
+            break;
 
-    case LDY:
-      M8_load(&M8_REG_Y);
-      break;
+        case LDX:
+            M8_load(&M8_REG_X);
+            break;
 
-    case LDCC:
-      M8_load(&M8_REG_CC);
-      break;
+        case LDY:
+            M8_load(&M8_REG_Y);
+            break;
 
-    case ANDA:
-      M8_and(&M8_REG_A);
-      break;
+        case LDCC:
+            M8_load(&M8_REG_CC);
+            break;
 
-    case ANDB:
-      M8_and(&M8_REG_B);
-      break;
+        case ANDA:
+            M8_and(&M8_REG_A);
+            break;
 
-    case STA:
-      M8_store(M8_REG_A);
-      break;
+        case ANDB:
+            M8_and(&M8_REG_B);
+            break;
 
-    case STB:
-      M8_store(M8_REG_B);
-      break;
+        case STA:
+            M8_store(M8_REG_A);
+            break;
 
-    case STX:
-      M8_store(M8_REG_X);
-      break;
+        case STB:
+            M8_store(M8_REG_B);
+            break;
 
-    case STY:
-      M8_store(M8_REG_Y);
-      break;
+        case STX:
+            M8_store(M8_REG_X);
+            break;
 
-    case STOP:
-      running = 0;
-      break;
+        case STY:
+            M8_store(M8_REG_Y);
+            break;
 
-      default:exit(1);
-  }
-  M8_REG_PC++;
+        case STOP:
+            running = 0;
+            break;
+
+            default:exit(1);
+    }
+    M8_REG_PC++;
 }
 
 int main() {
-  while (running) {
-    M8_eval(memory[M8_REG_PC]);
-    M8_printstate();
-  }
-  return 0;
+    while (running) {
+        M8_eval(memory[M8_REG_PC]);
+        M8_printstate();
+    }
+    return 0;
 }
