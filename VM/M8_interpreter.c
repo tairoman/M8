@@ -191,192 +191,194 @@ void M8_branch() {
 void M8_eval(char instruction) {
   switch (instruction) {
     case NOP: break;
-    case PSH: {
+
+    case PSH:
       M8_REG_SP++;
       M8_REG_PC++;
       memory[M8_REG_SP] = memory[M8_REG_PC];
       break;
-    }
-    case PULL: {
+
+    case PULL:
       M8_REG_PC++;
       M8_REG_SP--;
       *M8_getregister(memory[M8_REG_PC]) = memory[M8_REG_SP];
       break;
-    }
-    case TRF: {
+
+    case TRF:
       *M8_getregister(memory[M8_REG_PC+2]) = *M8_getregister(memory[M8_REG_PC+1]);
       M8_REG_PC += 2;
       break;
-    }
-    case JSR: {
+
+      case JSR:
       M8_REG_SP++;
       memory[M8_REG_SP] = M8_REG_PC;
       /* Mer register som ska upp på stacken? */
       M8_REG_PC++;
       M8_REG_PC = memory[M8_REG_PC];
       break;
-    }
-    case RTS: {
+
+    case RTS:
       M8_REG_SP--;
       M8_REG_PC = memory[M8_REG_SP];
       break;
-    }
-    case ADDA: {
+
+    case ADDA:
       M8_calc(&M8_REG_A, ADD);
       break;
-    }
-    case ADDB: {
+
+    case ADDB:
       M8_calc(&M8_REG_B, ADD);
       break;
-    }
-    case SUBA: {
+
+    case SUBA:
       M8_calc(&M8_REG_A, SUB);
       break;
-    }
-    case SUBB: {
+
+    case SUBB:
       M8_calc(&M8_REG_B, SUB);
       break;
-    }
-    case MULA: {
+
+    case MULA:
       M8_calc(&M8_REG_A, MUL);
-    }
-    case MULB: {
+
+    case MULB:
       M8_calc(&M8_REG_B, MUL);
       break;
-    }
-    case DIVA: {
+
+    case DIVA:
       M8_calc(&M8_REG_A, DIV);
       break;
-    }
-    case DIVB: {
+
+    case DIVB:
       M8_calc(&M8_REG_B, DIV);
       break;
-    }
-    case CMPA: {
+
+    case CMPA:
       M8_cmp(M8_REG_A);
       break;
-    }
-    case CMPB: {
+
+    case CMPB:
       M8_cmp(M8_REG_B);
       break;
-    }
-    case CMPX: {
+
+    case CMPX:
       M8_cmp(M8_REG_X);
       break;
-    }
-    case CMPY: {
+
+    case CMPY:
       M8_cmp(M8_REG_Y);
       break;
-    }
-    case BRA: {
+
+    case BRA:
       M8_branch();
       break;
-    }
+
     /* Some M8_branches here to implement! */
-    case CLRA: {
+    case CLRA:
       M8_clr(&M8_REG_A);
       break;
-    }
-    case CLRB: {
+
+    case CLRB:
       M8_clr(&M8_REG_B);
       break;
-    }
-    case CLRX: {
+
+    case CLRX:
       M8_clr(&M8_REG_X);
       break;
-    }
-    case CLRY: {
+
+      case CLRY:
       M8_clr(&M8_REG_Y);
       break;
-    }
-    case BITA: {
+
+    case BITA:
       M8_bit(M8_REG_A);
       break;
-    }
-    case BITB: {
+
+    case BITB:
       M8_bit(M8_REG_B);
       break;
-    }
-    case INCA: {
+
+    case INCA:
       M8_inc(&M8_REG_A);
       break;
-    }
-    case INCB: {
+
+    case INCB:
       M8_inc(&M8_REG_B);
       break;
-    }
-    case INCX: {
+
+    case INCX:
       M8_inc(&M8_REG_X);
       break;
-    }
-    case INCY: {
+
+    case INCY:
       M8_inc(&M8_REG_Y);
       break;
-    }
-    case LSRA: {
+
+    case LSRA:
       M8_lsr(&M8_REG_A);
       break;
-    }
-    case LSRB: {
+
+    case LSRB:
       M8_lsr(&M8_REG_B);
       break;
-    }
-    case LSLA: {
+
+    case LSLA:
       M8_lsl(&M8_REG_A);
       break;
-    }
-    case LSLB: {
+
+    case LSLB:
       M8_lsl(&M8_REG_B);
       break;
-    }
-    case LDA: {
+
+    case LDA:
       M8_load(&M8_REG_A);
       break;
-    }
-    case LDB: {
+
+    case LDB:
       M8_load(&M8_REG_B);
       break;
-    }
-    case LDX: {
+
+    case LDX:
       M8_load(&M8_REG_X);
       break;
-    }
-    case LDY: {
+
+    case LDY:
       M8_load(&M8_REG_Y);
       break;
-    }
-    case LDCC: {
+
+    case LDCC:
       M8_load(&M8_REG_CC);
       break;
-    }
-    case ANDA: {
+
+    case ANDA:
       M8_and(&M8_REG_A);
       break;
-    }
-    case ANDB: {
+
+    case ANDB:
       M8_and(&M8_REG_B);
       break;
-    }
-    case STA: {
+
+    case STA:
       M8_store(M8_REG_A);
       break;
-    }
-    case STB: {
+
+    case STB:
       M8_store(M8_REG_B);
       break;
-    }
-    case STX: {
+
+    case STX:
       M8_store(M8_REG_X);
       break;
-    }
-    case STY: {
+
+    case STY:
       M8_store(M8_REG_Y);
       break;
-    }
-    case STOP: {
+
+    case STOP:
       running = 0;
       break;
-    }
+
+      default:exit(1);
   }
   M8_REG_PC++;
 }
