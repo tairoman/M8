@@ -65,7 +65,7 @@ uint8_t* M8_getregister(M8_enum_Registers r_enum){
 }
 
 
-void M8_printregisters() {
+void M8_printregisters(void) {
     printf("Registers:\n");
     printf("A: %d\n", M8_REG_A);
     printf("B: %d\n", M8_REG_B);
@@ -76,7 +76,7 @@ void M8_printregisters() {
     printf("CC: %d\n", M8_REG_CC);
 }
 
-void M8_printflags() {
+void M8_printflags(void) {
     printf("Flags:\n");
     printf("C: %d\n", M8_BIT_C);
     printf("V: %d\n", M8_BIT_V);
@@ -84,7 +84,7 @@ void M8_printflags() {
     printf("N: %d\n", M8_BIT_N);
 }
 
-void M8_printstate() {
+void M8_printstate(void) {
   printf("------------------");
   M8_printregisters();
   M8_printflags();
