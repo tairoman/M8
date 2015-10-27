@@ -94,6 +94,7 @@ void M8_setflags(int16_t result, uint8_t op1, uint8_t op2) {
   if (result < M8_MIN || result > M8_MAX) {
     M8_ENABLE_C;
   } else {
+
     M8_DISABLE_C;
   }
 
@@ -131,7 +132,7 @@ void M8_clr(uint8_t *r) {
 }
 
 void M8_inc(uint8_t *r) {
-  *r++;
+  (*r)++;
   int16_t temp = *r;
   M8_setflags(temp, *r, 1);
 }
