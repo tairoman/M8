@@ -90,7 +90,7 @@ void M8_printstate(void) {
     M8_printflags();
 }
 
-void M8_setflags(int16_t result, uint8_t op1, uint8_t op2) {
+void M8_setflags(int16_t result, int8_t op1, int8_t op2) {
     if (result < M8_MIN || result > M8_MAX) {
         M8_ENABLE_C;
     } else {
@@ -145,6 +145,7 @@ void M8_dec(uint8_t *r) {
 void M8_load(uint8_t *r) {
     M8_REG_PC++;
     *r = memory[M8_REG_PC];
+    M8_setflags(*r,0,0);
 }
 
 void M8_and(uint8_t *r) {
