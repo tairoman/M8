@@ -273,7 +273,62 @@ void M8_eval(char instruction) {
             M8_branch();
             break;
 
-        /* Some M8_branches here to implement! */
+        case BCC:
+            if (!M8_BIT_C){M8_branch();}
+            break;
+
+        case BCS:
+            if (M8_BIT_C){M8_branch();}
+            break;
+
+        case BGT:
+            if (!((M8_BIT_N ^ M8_BIT_V) | M8_BIT_Z)){M8_branch();}
+            break;
+
+        case BNE:
+            if (!M8_BIT_Z){M8_branch();}
+            break;
+
+        case BEQ:
+            if (M8_BIT_Z){M8_branch();}
+            break;
+
+        case BGE:
+            if (!(M8_BIT_N ^ M8_BIT_V)){M8_branch();}
+            break;
+
+        case BHI:
+            if (!(M8_BIT_Z | M8_BIT_C)){M8_branch();}
+            break;
+
+        case BLE:
+            if ((M8_BIT_N ^ M8_BIT_V) | M8_BIT_Z){M8_branch();}
+            break;
+
+        case BLS:
+            if (M8_BIT_C | M8_BIT_Z){M8_branch();}
+            break;
+
+        case BLT:
+            if (M8_BIT_N ^ M8_BIT_V){M8_branch();}
+            break;
+
+        case BMI:
+            if (M8_BIT_N){M8_branch();}
+            break;
+
+        case BPL:
+            if (!M8_BIT_N){M8_branch();}
+            break;
+
+        case BVC:
+            if (!M8_BIT_V){M8_branch();}
+            break;
+
+        case BVS:
+            if (M8_BIT_V){M8_branch();}
+            break;
+
         case CLRA:
             M8_clr(&M8_REG_A);
             break;

@@ -35,9 +35,9 @@ typedef enum {
     BGT, /* Branch on greater than zero ((N xor V) or Z) = 0 */
     BNE, /* Branch on not equal to zero (Z=0)*/
     BEQ, /* Branch on equal to zero (Z=1)*/
-    BGE, /* Branch on greater than or equal to zero (N xor V)*/
+    BGE, /* Branch on greater than or equal to zero (N xor V) = 0 */
     BHI, /* Branch if higher than zero (Z or C) = 0 */
-    BLE, /* Branch on less than or equal to zero ((N xor Z) or Z) = 0 */
+    BLE, /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
     BLS, /* Branch on lower or same (C or Z) = 1 */
     BLT, /* Branch on less than zero (N xor V) = 1 */
     BMI, /* Branch on minus (N=1) */
