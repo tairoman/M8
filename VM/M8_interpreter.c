@@ -189,9 +189,13 @@ void M8_calc(uint8_t *r, M8_Operators op) {
     *r = (uint8_t) temp;
 }
 
-void M8_branch() {
-    M8_REG_PC++;
-    M8_REG_PC = memory[M8_REG_PC];
+void M8_branch(uint8_t will_jump) {
+    if (will_jump) {
+        M8_REG_PC++;
+        M8_REG_PC = memory[M8_REG_PC];
+    } else {
+        M8_REG_PC++; // Go to next instruction
+    }
 }
 
 void M8_eval(char instruction) {
@@ -277,63 +281,63 @@ void M8_eval(char instruction) {
             break;
 
         case BRA:
-            M8_branch();
+            M8_branch(1);
             break;
 
         case BCC:
-            if (!M8_BIT_C){M8_branch();}
+            M8_branch((uint8_t) !M8_BIT_C);
             break;
 
         case BCS:
-            if (M8_BIT_C){M8_branch();}
+            M8_branch((uint8_t) M8_BIT_C);
             break;
 
         case BGT:
-            if (!((M8_BIT_N ^ M8_BIT_V) | M8_BIT_Z)){M8_branch();}
+            M8_branch((uint8_t) !((M8_BIT_N ^ M8_BIT_V) | M8_BIT_Z));
             break;
 
         case BNE:
-            if (!M8_BIT_Z){M8_branch();}
+            M8_branch((uint8_t) !M8_BIT_Z);
             break;
 
         case BEQ:
-            if (M8_BIT_Z){M8_branch();}
+            M8_branch((uint8_t) M8_BIT_Z);
             break;
 
         case BGE:
-            if (!(M8_BIT_N ^ M8_BIT_V)){M8_branch();}
+            M8_branch((uint8_t) !(M8_BIT_N ^ M8_BIT_V));
             break;
 
         case BHI:
-            if (!(M8_BIT_Z | M8_BIT_C)){M8_branch();}
+            M8_branch((uint8_t) !(M8_BIT_Z | M8_BIT_C));
             break;
 
         case BLE:
-            if ((M8_BIT_N ^ M8_BIT_V) | M8_BIT_Z){M8_branch();}
+            M8_branch((uint8_t) ((M8_BIT_N ^ M8_BIT_V) | M8_BIT_Z));
             break;
 
         case BLS:
-            if (M8_BIT_C | M8_BIT_Z){M8_branch();}
+            M8_branch((uint8_t) (M8_BIT_C | M8_BIT_Z));
             break;
 
         case BLT:
-            if (M8_BIT_N ^ M8_BIT_V){M8_branch();}
+            M8_branch((uint8_t) (M8_BIT_N ^ M8_BIT_V));
             break;
 
         case BMI:
-            if (M8_BIT_N){M8_branch();}
+            M8_branch((uint8_t) M8_BIT_N);
             break;
 
         case BPL:
-            if (!M8_BIT_N){M8_branch();}
+            M8_branch((uint8_t) !M8_BIT_N);
             break;
 
         case BVC:
-            if (!M8_BIT_V){M8_branch();}
+            M8_branch((uint8_t) !M8_BIT_V);
             break;
 
         case BVS:
-            if (M8_BIT_V){M8_branch();}
+            M8_branch((uint8_t) M8_BIT_V);
             break;
 
         case CLRA:

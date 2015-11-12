@@ -120,5 +120,6 @@ void M8_bit(uint8_t r);
 void M8_lsr(uint8_t *r);
 void M8_lsl(uint8_t *r);
 void M8_calc(uint8_t *r, M8_Operators op);
+void M8_branch(uint8_t will_jump);
 
 #endif
