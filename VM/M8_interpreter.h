@@ -6,9 +6,11 @@
 
 #include <stdint.h>
 
-/* - probably needs more branch M8_Instructions
-   - TODO: describe M8_Instructions
-   - TODO: test all M8_Instructions!
+/*
+   - TODO: Describe M8_Instructions
+   - TODO: Change PSH and PULL to be specific for every register (ex. PSHA)
+   - TODO: Test all M8_Instructions!
+   - TODO: Make some instructions adressing specific (is the argument a pointer to a value or the value itself?)
 */
 typedef enum {
     NOP,

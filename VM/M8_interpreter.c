@@ -177,6 +177,7 @@ void M8_lsl(uint8_t *r) {
     M8_setflags(temp, *r, 1); /* Is 1 correct? */
 }
 
+// TODO: Fix M8_calc function.
 void M8_calc(uint8_t *r, M8_Operators op) {
     int16_t temp = 1;
     switch (op) {
