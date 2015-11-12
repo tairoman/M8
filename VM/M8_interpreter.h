@@ -54,6 +54,10 @@ typedef enum {
     INCB,
     INCX,
     INCY,
+    DECA,
+    DECB,
+    DECX,
+    DECY,
     LSRA,
     LSRB,
     LSLA,
@@ -109,6 +113,7 @@ void M8_eval(char instruction);
 void M8_cmp(uint8_t r);
 void M8_clr(uint8_t *r);
 void M8_inc(uint8_t *r);
+void M8_dec(uint8_t *r);
 void M8_load(uint8_t *r);
 void M8_store(uint8_t r);
 void M8_bit(uint8_t r);

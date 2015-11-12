@@ -47,7 +47,7 @@
 #define M8_MAX 255
 
 M8_Registers regs;
-uint8_t memory[M8_MEMORY_SIZE] = {LDA, 6, LDB, 4, NOP, TRF, A, B, CLRA, CMPB, 7, STOP};
+uint8_t memory[M8_MEMORY_SIZE] = {LDA, 7, DECA, BNE, 1, LDB, 7, STOP};
 int running = 1;
 
 uint8_t* M8_getregister(M8_enum_Registers r_enum){
@@ -133,6 +133,12 @@ void M8_clr(uint8_t *r) {
 void M8_inc(uint8_t *r) {
     (*r)++;
     int16_t temp = *r;
+    M8_setflags(temp, *r, 1);
+}
+
+void M8_dec(uint8_t *r) {
+    int16_t temp = (*r)-1;
+    (*r)--;
     M8_setflags(temp, *r, 1);
 }
 
@@ -367,6 +373,22 @@ void M8_eval(char instruction) {
 
         case INCY:
             M8_inc(&M8_REG_Y);
+            break;
+
+        case DECA:
+            M8_dec(&M8_REG_A);
+            break;
+
+        case DECB:
+            M8_dec(&M8_REG_B);
+            break;
+
+        case DECX:
+            M8_dec(&M8_REG_X);
+            break;
+
+        case DECY:
+            M8_dec(&M8_REG_Y);
             break;
 
         case LSRA:
