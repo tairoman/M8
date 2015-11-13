@@ -47,7 +47,7 @@
 #define M8_MAX 255
 
 M8_Registers regs;
-uint8_t memory[M8_MEMORY_SIZE] = {LDA, 7, DECA, BNE, 1, LDB, 7, STOP};
+uint8_t memory[M8_MEMORY_SIZE] = {LDA, 7, DECA, BNE, 1, LDB, 7, PSHB, PULA, STOP};
 int running = 1;
 
 uint8_t* M8_getregister(M8_enum_Registers r_enum){
@@ -199,21 +199,51 @@ void M8_branch(uint8_t will_jump) {
     }
 }
 
+void M8_push(uint8_t r) {
+    M8_REG_SP++;
+    memory[M8_REG_SP] = r;
+}
+
+void M8_pull(uint8_t *r) {
+    *r = memory[M8_REG_SP];
+    M8_REG_SP--;
+}
+
 void M8_eval(char instruction) {
     switch (instruction) {
 
         case NOP: break;
 
-        case PSH:
-            M8_REG_SP++;
-            M8_REG_PC++;
-            memory[M8_REG_SP] = memory[M8_REG_PC];
+        case PSHA:
+            M8_push(M8_REG_A);
             break;
 
-        case PULL:
-            M8_REG_PC++;
-            M8_REG_SP--;
-            *M8_getregister(memory[M8_REG_PC]) = memory[M8_REG_SP];
+        case PSHB:
+            M8_push(M8_REG_B);
+            break;
+
+        case PSHX:
+            M8_push(M8_REG_X);
+            break;
+
+        case PSHY:
+            M8_push(M8_REG_Y);
+            break;
+
+        case PULA:
+            M8_pull(&M8_REG_A);
+            break;
+
+        case PULB:
+            M8_pull(&M8_REG_B);
+            break;
+
+        case PULX:
+            M8_pull(&M8_REG_X);
+            break;
+
+        case PULY:
+            M8_pull(&M8_REG_Y);
             break;
 
         case TRF:

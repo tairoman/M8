@@ -8,14 +8,19 @@
 
 /*
    - TODO: Describe M8_Instructions
-   - TODO: Change PSH and PULL to be specific for every register (ex. PSHA)
    - TODO: Test all M8_Instructions!
    - TODO: Make some instructions adressing specific (is the argument a pointer to a value or the value itself?)
 */
 typedef enum {
     NOP,
-    PSH,
-    PULL,
+    PSHA,
+    PSHB,
+    PSHX,
+    PSHY,
+    PULA,
+    PULB,
+    PULX,
+    PULY,
     TRF,
     JSR,
     RTS,
@@ -123,5 +128,8 @@ void M8_lsr(uint8_t *r);
 void M8_lsl(uint8_t *r);
 void M8_calc(uint8_t *r, M8_Operators op);
 void M8_branch(uint8_t will_jump);
+void M8_push(uint8_t r);
+void M8_pull(uint8_t *r);
+
 
 #endif
