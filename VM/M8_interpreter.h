@@ -21,7 +21,18 @@ typedef enum {
     PULB,
     PULX,
     PULY,
-    TRF,
+    TRFAB,
+    TRFBA,
+    TRFAX,
+    TRFXA,
+    TRFAY,
+    TRFYA,
+    TRFXY,
+    TRFYX,
+    TRFBX,
+    TRFXB,
+    TRFBY,
+    TRFYB,
     JSR,
     RTS,
     ADDA,
@@ -95,23 +106,12 @@ typedef struct  {
 
 
 typedef enum {
-    A,
-    B,
-    X,
-    Y,
-    SP,
-    PC,
-    CC
-} M8_enum_Registers;
-
-typedef enum {
     ADD,
     SUB,
     MUL,
     DIV
 } M8_Operators;
 
-uint8_t* M8_getregister(M8_enum_Registers r_enum);
 void M8_setflags(int16_t result, int8_t op1, int8_t op2);
 void M8_printregisters(void);
 void M8_printflags(void);
@@ -130,6 +130,7 @@ void M8_calc(uint8_t *r, M8_Operators op);
 void M8_branch(uint8_t will_jump);
 void M8_push(uint8_t r);
 void M8_pull(uint8_t *r);
+void M8_transfer(uint8_t sender_r, uint8_t *receiver_r);
 
 
 #endif

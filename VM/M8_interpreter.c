@@ -47,23 +47,8 @@
 #define M8_MAX 255
 
 M8_Registers regs;
-uint8_t memory[M8_MEMORY_SIZE] = {LDA, 7, DECA, BNE, 1, LDB, 7, PSHB, PULA, STOP};
+uint8_t memory[M8_MEMORY_SIZE] = {LDA, 7, DECA, BNE, 1, LDB, 7, TRFBA, STOP};
 int running = 1;
-
-uint8_t* M8_getregister(M8_enum_Registers r_enum){
-    uint8_t* r = NULL;
-    switch (r_enum) {
-        case A:  r=&M8_REG_A;  break;
-        case B:  r=&M8_REG_B;  break;
-        case X:  r=&M8_REG_X;  break;
-        case Y:  r=&M8_REG_Y;  break;
-        case SP: r=&M8_REG_SP; break;
-        case PC: r=&M8_REG_PC; break;
-        case CC: r=&M8_REG_CC; break;
-    }
-    return r;
-}
-
 
 void M8_printregisters(void) {
     printf("Registers:\n");
@@ -209,6 +194,10 @@ void M8_pull(uint8_t *r) {
     M8_REG_SP--;
 }
 
+void M8_transfer(uint8_t sender_r, uint8_t *receiver_r){
+    *receiver_r = sender_r;
+}
+
 void M8_eval(char instruction) {
     switch (instruction) {
 
@@ -246,9 +235,52 @@ void M8_eval(char instruction) {
             M8_pull(&M8_REG_Y);
             break;
 
-        case TRF:
-            *M8_getregister(memory[M8_REG_PC+2]) = *M8_getregister(memory[M8_REG_PC+1]);
-            M8_REG_PC += 2;
+        case TRFAB:
+            M8_transfer(M8_REG_A,&M8_REG_B);
+            break;
+
+        case TRFBA:
+            M8_transfer(M8_REG_B,&M8_REG_A);
+            break;
+
+        case TRFAX:
+            M8_transfer(M8_REG_A,&M8_REG_X);
+            break;
+
+        case TRFXA:
+            M8_transfer(M8_REG_X,&M8_REG_A);
+            break;
+
+        case TRFAY:
+            M8_transfer(M8_REG_A,&M8_REG_Y);
+            break;
+
+        case TRFYA:
+            M8_transfer(M8_REG_Y,&M8_REG_A);
+            break;
+
+        case TRFXY:
+            M8_transfer(M8_REG_X,&M8_REG_Y);
+            break;
+
+        case TRFYX:
+            M8_transfer(M8_REG_Y,&M8_REG_X);
+            break;
+
+        case TRFBX:
+            M8_transfer(M8_REG_B,&M8_REG_X);
+            break;
+
+        case TRFXB:
+            M8_transfer(M8_REG_X,&M8_REG_B);
+            break;
+
+        case TRFBY:
+            M8_transfer(M8_REG_B,&M8_REG_Y);
+            break;
+
+        case TRFYB:
+            M8_transfer(M8_REG_Y,&M8_REG_B);
             break;
 
         case JSR:
