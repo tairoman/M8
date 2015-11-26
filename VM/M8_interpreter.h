@@ -10,6 +10,7 @@
    - TODO: Describe M8_Instructions
    - TODO: Test all M8_Instructions!
    - TODO: Make some instructions adressing specific (is the argument a pointer to a value or the value itself?)
+   - TODO: Interrupts?
 */
 typedef enum {
     NOP,
@@ -94,6 +95,25 @@ typedef enum {
     STOP,
 } M8_Instructions;
 
+typedef struct {
+    uint8_t A;
+    uint8_t B;
+    uint8_t X;
+    uint8_t Y;
+    uint8_t SP;
+    uint8_t PC;
+
+    struct {
+        unsigned int N : 1;
+        unsigned int Z : 1;
+        unsigned int V : 1;
+        unsigned int C : 1;
+    } CC;
+
+    uint8_t memory[256];
+
+} M8_CPU;
+
 typedef struct  {
     uint8_t A;
     uint8_t B;
@@ -118,6 +138,7 @@ void M8_printflags(void);
 void M8_printstate(void);
 void M8_eval(char instruction);
 void M8_cmp(uint8_t r);
+void M8_and(uint8_t *r);
 void M8_clr(uint8_t *r);
 void M8_inc(uint8_t *r);
 void M8_dec(uint8_t *r);
