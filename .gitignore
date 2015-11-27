@@ -1,2 +1,3 @@
 /VM/*.exe
+/VM/*.out
 /.idea/*

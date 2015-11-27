@@ -85,7 +85,6 @@ typedef enum {
     LDB,
     LDX,
     LDY,
-    LDCC,
     ANDA,
     ANDB,
     STA,
@@ -96,6 +95,13 @@ typedef enum {
 } M8_Instructions;
 
 typedef struct {
+    unsigned int N : 1;
+    unsigned int Z : 1;
+    unsigned int V : 1;
+    unsigned int C : 1;
+} M8_CC;
+
+typedef struct {
     uint8_t A;
     uint8_t B;
     uint8_t X;
@@ -103,27 +109,11 @@ typedef struct {
     uint8_t SP;
     uint8_t PC;
 
-    struct {
-        unsigned int N : 1;
-        unsigned int Z : 1;
-        unsigned int V : 1;
-        unsigned int C : 1;
-    } CC;
+    M8_CC *CC;
 
     uint8_t memory[256];
 
-} M8_CPU;
-
-typedef struct  {
-    uint8_t A;
-    uint8_t B;
-    uint8_t X;
-    uint8_t Y;
-    uint8_t SP;
-    uint8_t PC;
-    uint8_t CC;
-} M8_Registers;
-
+} M8_VM;
 
 typedef enum {
     ADD,
@@ -132,25 +122,25 @@ typedef enum {
     DIV
 } M8_Operators;
 
-void M8_setflags(int16_t result, int8_t op1, int8_t op2);
-void M8_printregisters(void);
-void M8_printflags(void);
-void M8_printstate(void);
-void M8_eval(char instruction);
-void M8_cmp(uint8_t r);
-void M8_and(uint8_t *r);
-void M8_clr(uint8_t *r);
-void M8_inc(uint8_t *r);
-void M8_dec(uint8_t *r);
-void M8_load(uint8_t *r);
-void M8_store(uint8_t r);
-void M8_bit(uint8_t r);
-void M8_lsr(uint8_t *r);
-void M8_lsl(uint8_t *r);
-void M8_calc(uint8_t *r, M8_Operators op);
-void M8_branch(uint8_t will_jump);
-void M8_push(uint8_t r);
-void M8_pull(uint8_t *r);
+void M8_setflags(M8_VM *vm, int16_t result, int8_t op1, int8_t op2);
+void M8_printregisters(const M8_VM *vm);
+void M8_printflags(const M8_VM *vm);
+void M8_printstate(const M8_VM *vm);
+void M8_eval(M8_VM *vm, char instruction);
+void M8_cmp(M8_VM *vm, uint8_t r);
+void M8_and(M8_VM *vm, uint8_t *r);
+void M8_clr(M8_VM *vm, uint8_t *r);
+void M8_inc(M8_VM *vm, uint8_t *r);
+void M8_dec(M8_VM *vm, uint8_t *r);
+void M8_load(M8_VM *vm, uint8_t *r);
+void M8_store(M8_VM *vm, uint8_t r);
+void M8_bit(M8_VM *vm, uint8_t r);
+void M8_lsr(M8_VM *vm, uint8_t *r);
+void M8_lsl(M8_VM *vm, uint8_t *r);
+void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op);
+void M8_branch(M8_VM *vm, uint8_t will_jump);
+void M8_push(M8_VM *vm, uint8_t r);
+void M8_pull(M8_VM *vm, uint8_t *r);
 void M8_transfer(uint8_t sender_r, uint8_t *receiver_r);
 
 
