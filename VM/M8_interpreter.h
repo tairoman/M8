@@ -94,12 +94,12 @@ typedef enum {
     STOP,
 } M8_Instructions;
 
-typedef struct {
-    unsigned int N : 1;
-    unsigned int Z : 1;
-    unsigned int V : 1;
-    unsigned int C : 1;
-} M8_CC;
+typedef enum {
+    M8_C = 0,
+    M8_Z = 1,
+    M8_V = 2,
+    M8_N = 3
+} M8_Flags;
 
 typedef struct {
     uint8_t A;
@@ -108,8 +108,7 @@ typedef struct {
     uint8_t Y;
     uint8_t SP;
     uint8_t PC;
-
-    M8_CC *CC;
+    uint8_t CC;
 
     uint8_t memory[256];
 
@@ -122,6 +121,9 @@ typedef enum {
     DIV
 } M8_Operators;
 
+void M8_set_flag(M8_VM *vm, M8_Flags f);
+void M8_clear_flag(M8_VM *vm, M8_Flags f);
+uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f);
 void M8_setflags(M8_VM *vm, int16_t result, int8_t op1, int8_t op2);
 void M8_printregisters(const M8_VM *vm);
 void M8_printflags(const M8_VM *vm);

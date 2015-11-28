@@ -10,6 +10,18 @@
 
 int running = 1;
 
+void M8_set_flag(M8_VM *vm, M8_Flags f) {
+    (vm->CC) |= 1 << f;
+}
+
+void M8_clear_flag(M8_VM *vm, M8_Flags f) {
+    (vm->CC) &= ~(1 << f);
+}
+
+uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
+    return (uint8_t) (((vm->CC) >> f) & 1);
+}
+
 void M8_printregisters(const M8_VM *vm) {
     printf("Registers:\n");
     printf("A: %d\n", vm->A);
@@ -22,10 +34,10 @@ void M8_printregisters(const M8_VM *vm) {
 
 void M8_printflags(const M8_VM *vm) {
     printf("Flags:\n");
-    printf("C: %d\n", vm->CC->C);
-    printf("V: %d\n", vm->CC->V);
-    printf("Z: %d\n", vm->CC->Z);
-    printf("N: %d\n", vm->CC->N);
+    printf("C: %d\n", M8_get_flag(vm, M8_C));
+    printf("V: %d\n", M8_get_flag(vm, M8_V));
+    printf("Z: %d\n", M8_get_flag(vm, M8_Z));
+    printf("N: %d\n", M8_get_flag(vm, M8_N));
 }
 
 void M8_printstate(const M8_VM *vm) {
@@ -36,29 +48,29 @@ void M8_printstate(const M8_VM *vm) {
 
 void M8_setflags(M8_VM *vm, int16_t result, int8_t op1, int8_t op2) {
     if (result < M8_MIN || result > M8_MAX) {
-        vm->CC->C = 1;
+        M8_set_flag(vm, M8_C);
     } else {
-        vm->CC->C = 0;
+        M8_clear_flag(vm, M8_C);
     }
 
     if (!M8_BIT_SEVEN(result) && M8_BIT_SEVEN(op1) && M8_BIT_SEVEN(op2) ||
         M8_BIT_SEVEN(result) && !M8_BIT_SEVEN(op1) && !M8_BIT_SEVEN(op2) ||
         result < M8_MIN || result > M8_MAX){
-        vm->CC->V = 1;
+        M8_set_flag(vm, M8_V);
     } else {
-        vm->CC->V = 0;
+        M8_clear_flag(vm, M8_V);
     }
 
     if (result < M8_MIN) {
-        vm->CC->N = 1;
+        M8_set_flag(vm, M8_N);
     } else {
-        vm->CC->N = 0;
+        M8_clear_flag(vm, M8_N);
     }
 
     if (!result) { /* == 0 */
-        vm->CC->Z = 1;
+        M8_set_flag(vm, M8_Z);
     } else {
-        vm->CC->Z = 0;
+        M8_clear_flag(vm, M8_Z);
     }
 }
 
@@ -71,7 +83,7 @@ void M8_cmp(M8_VM *vm, uint8_t r) {
 
 void M8_clr(M8_VM *vm, uint8_t *r) {
     *r = 0;
-    vm->CC->Z = 1;
+    M8_set_flag(vm, M8_Z);
 }
 
 void M8_inc(M8_VM *vm, uint8_t *r) {
@@ -297,59 +309,59 @@ void M8_eval(M8_VM *vm, char instruction) {
             break;
 
         case BCC:
-            M8_branch(vm, (uint8_t) !vm->CC->C);
+            M8_branch(vm, (uint8_t) !M8_get_flag(vm, M8_C));
             break;
 
         case BCS:
-            M8_branch(vm, (uint8_t) vm->CC->C);
+            M8_branch(vm, (uint8_t) M8_get_flag(vm, M8_C));
             break;
 
         case BGT:
-            M8_branch(vm, (uint8_t) !((vm->CC->N ^ vm->CC->V) | vm->CC->Z));
+            M8_branch(vm, (uint8_t) !((M8_get_flag(vm, M8_N) ^ M8_get_flag(vm, M8_V)) | M8_get_flag(vm, M8_Z)));
             break;
 
         case BNE:
-            M8_branch(vm, (uint8_t) !vm->CC->Z);
+            M8_branch(vm, (uint8_t) !M8_get_flag(vm, M8_Z));
             break;
 
         case BEQ:
-            M8_branch(vm, (uint8_t) vm->CC->Z);
+            M8_branch(vm, (uint8_t) M8_get_flag(vm, M8_Z));
             break;
 
         case BGE:
-            M8_branch(vm, (uint8_t) !(vm->CC->N ^ vm->CC->V));
+            M8_branch(vm, (uint8_t) !(M8_get_flag(vm, M8_N) ^ M8_get_flag(vm, M8_V)));
             break;
 
         case BHI:
-            M8_branch(vm, (uint8_t) !(vm->CC->Z | vm->CC->C));
+            M8_branch(vm, (uint8_t) !(M8_get_flag(vm, M8_Z) | M8_get_flag(vm, M8_C)));
             break;
 
         case BLE:
-            M8_branch(vm, (uint8_t) ((vm->CC->N ^ vm->CC->V) | vm->CC->Z));
+            M8_branch(vm, (uint8_t) ((M8_get_flag(vm, M8_N) ^ M8_get_flag(vm, M8_V)) | M8_get_flag(vm, M8_Z)));
             break;
 
         case BLS:
-            M8_branch(vm, (uint8_t) (vm->CC->C | vm->CC->Z));
+            M8_branch(vm, (uint8_t) (M8_get_flag(vm, M8_C) | M8_get_flag(vm, M8_Z)));
             break;
 
         case BLT:
-            M8_branch(vm, (uint8_t) (vm->CC->N ^ vm->CC->V));
+            M8_branch(vm, (uint8_t) (M8_get_flag(vm, M8_N) ^ M8_get_flag(vm, M8_V)));
             break;
 
         case BMI:
-            M8_branch(vm, (uint8_t) vm->CC->N);
+            M8_branch(vm, (uint8_t) M8_get_flag(vm, M8_N));
             break;
 
         case BPL:
-            M8_branch(vm, (uint8_t) !vm->CC->N);
+            M8_branch(vm, (uint8_t) !M8_get_flag(vm, M8_N));
             break;
 
         case BVC:
-            M8_branch(vm, (uint8_t) !vm->CC->V);
+            M8_branch(vm, (uint8_t) !M8_get_flag(vm, M8_V));
             break;
 
         case BVS:
-            M8_branch(vm, (uint8_t) vm->CC->V);
+            M8_branch(vm, (uint8_t) M8_get_flag(vm, M8_V));
             break;
 
         case CLRA:
@@ -475,7 +487,6 @@ void M8_eval(M8_VM *vm, char instruction) {
 
 int main() {
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
-    vm->CC = calloc(4, sizeof(M8_CC));
     uint8_t arr[256] ={LDA, 7, DECA, BNE, 1, LDB, 7, CLRA, DECA, TRFBA, STOP};
     for(int i=0; i < 256;i++){
         vm->memory[i] = arr[i];
