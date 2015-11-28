@@ -2,11 +2,10 @@
 cmake_minimum_required(VERSION 3.3)
 project(M8)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c99 -fshort-enums")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -fshort-enums")
 
 set(SOURCE_FILES
     VM/M8_interpreter.c
-    VM/M8_interpreter.h
-    README.md)
+    VM/M8_interpreter.h)
 
 add_executable(M8 ${SOURCE_FILES})
