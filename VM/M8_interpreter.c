@@ -1,14 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <assert.h>
+#include <stdbool.h>
 
 #include "M8_interpreter.h"
-
-#define M8_BIT_SEVEN(x) (x>>7 & 1)
 
 #define M8_MIN 0
 #define M8_MAX 255
 
-int running = 1;
+bool running = true;
+
+inline bool M8_get_bit_seven(int16_t x){
+    return ((x>>7) & 1) == 1;
+}
 
 inline void M8_set_flag(M8_VM *vm, M8_Flags f) {
     (vm->CC) |= 1 << f;
@@ -41,7 +45,7 @@ void M8_printflags(const M8_VM *vm) {
 }
 
 void M8_printstate(const M8_VM *vm) {
-    printf("------------------");
+    printf("------------------\n");
     M8_printregisters(vm);
     M8_printflags(vm);
 }
@@ -53,8 +57,8 @@ void M8_setflags(M8_VM *vm, int16_t result, int8_t op1, int8_t op2) {
         M8_clear_flag(vm, M8_C);
     }
 
-    if (!M8_BIT_SEVEN(result) && M8_BIT_SEVEN(op1) && M8_BIT_SEVEN(op2) ||
-        M8_BIT_SEVEN(result) && !M8_BIT_SEVEN(op1) && !M8_BIT_SEVEN(op2) ||
+    if (!M8_get_bit_seven(result) && M8_get_bit_seven(op1) && M8_get_bit_seven(op2) ||
+        M8_get_bit_seven(result) && !M8_get_bit_seven(op1) && !M8_get_bit_seven(op2) ||
         result < M8_MIN || result > M8_MAX){
         M8_set_flag(vm, M8_V);
     } else {
@@ -477,7 +481,7 @@ void M8_eval(M8_VM *vm, char instruction) {
             break;
 
         case STOP:
-            running = 0;
+            running = false;
             break;
 
             default:exit(1);
@@ -487,6 +491,7 @@ void M8_eval(M8_VM *vm, char instruction) {
 
 int main() {
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
+    assert(vm!=NULL);
     uint8_t arr[256] ={LDA, 7, DECA, BNE, 1, LDB, 7, CLRA, DECA, TRFBA, STOP};
     for(int i=0; i < 256;i++){
         vm->memory[i] = arr[i];

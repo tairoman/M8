@@ -121,6 +121,7 @@ typedef enum {
     DIV
 } M8_Operators;
 
+extern inline bool M8_get_bit_seven(int16_t x);
 extern inline void M8_set_flag(M8_VM *vm, M8_Flags f);
 extern inline void M8_clear_flag(M8_VM *vm, M8_Flags f);
 extern inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f);
