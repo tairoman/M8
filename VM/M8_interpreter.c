@@ -10,15 +10,15 @@
 
 int running = 1;
 
-void M8_set_flag(M8_VM *vm, M8_Flags f) {
+inline void M8_set_flag(M8_VM *vm, M8_Flags f) {
     (vm->CC) |= 1 << f;
 }
 
-void M8_clear_flag(M8_VM *vm, M8_Flags f) {
+inline void M8_clear_flag(M8_VM *vm, M8_Flags f) {
     (vm->CC) &= ~(1 << f);
 }
 
-uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
+inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
     return (uint8_t) (((vm->CC) >> f) & 1);
 }
 
