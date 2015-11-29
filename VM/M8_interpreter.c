@@ -510,5 +510,8 @@ int main() {
         M8_eval(vm, vm->memory[vm->PC]);
         M8_print_state(vm);
     }
+
+    free(vm);
+
     return 0;
 }
