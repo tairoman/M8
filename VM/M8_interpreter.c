@@ -26,7 +26,7 @@ inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
     return (uint8_t) (((vm->CC) >> f) & 1);
 }
 
-void M8_printregisters(const M8_VM *vm) {
+void M8_print_registers(const M8_VM *vm) {
     printf("Registers:\n");
     printf("A: %d\n", vm->A);
     printf("B: %d\n", vm->B);
@@ -36,7 +36,7 @@ void M8_printregisters(const M8_VM *vm) {
     printf("PC: %d\n",vm->PC);
 }
 
-void M8_printflags(const M8_VM *vm) {
+void M8_print_flags(const M8_VM *vm) {
     printf("Flags:\n");
     printf("C: %d\n", M8_get_flag(vm, M8_C));
     printf("V: %d\n", M8_get_flag(vm, M8_V));
@@ -44,13 +44,13 @@ void M8_printflags(const M8_VM *vm) {
     printf("N: %d\n", M8_get_flag(vm, M8_N));
 }
 
-void M8_printstate(const M8_VM *vm) {
+void M8_print_state(const M8_VM *vm) {
     printf("------------------\n");
-    M8_printregisters(vm);
-    M8_printflags(vm);
+    M8_print_registers(vm);
+    M8_print_flags(vm);
 }
 
-void M8_setflags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2) {
+void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2) {
     if (result < M8_MIN || result > M8_MAX) {
         M8_set_flag(vm, M8_C);
     } else {
@@ -81,7 +81,7 @@ void M8_setflags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t
 void M8_cmp(M8_VM *vm, uint8_t r) {
     uint8_t op = vm->memory[vm->PC+1];
     int16_t temp = r - op;
-    M8_setflags(vm, temp, r, op);
+    M8_change_flags(vm, temp, r, op);
     vm->PC++;
 }
 
@@ -93,18 +93,18 @@ void M8_clr(M8_VM *vm, uint8_t *r) {
 void M8_inc(M8_VM *vm, uint8_t *r) {
     (*r)++;
     int16_t temp = *r;
-    M8_setflags(vm, temp, *r, 1);
+    M8_change_flags(vm, temp, *r, 1);
 }
 
 void M8_dec(M8_VM *vm, uint8_t *r) {
     int16_t temp = (*r)- 1;
     (*r)--;
-    M8_setflags(vm, temp, *r, 1);
+    M8_change_flags(vm, temp, *r, 1);
 }
 
 void M8_load(M8_VM *vm, uint8_t *r) {
     *r = vm->memory[++vm->PC];
-    M8_setflags(vm, *r,0,0);
+    M8_change_flags(vm, *r,0,0);
 }
 
 void M8_and(M8_VM *vm, uint8_t *r) {
@@ -118,19 +118,19 @@ void M8_store(M8_VM *vm, uint8_t r) {
 void M8_bit(M8_VM *vm, uint8_t r) {
     uint8_t op = vm->memory[++vm->PC];
     int16_t temp = r & op;
-    M8_setflags(vm, temp, r, op);
+    M8_change_flags(vm, temp, r, op);
 }
 
 void M8_lsr(M8_VM *vm, uint8_t *r) {
     *r >>= 1;
     int16_t temp = *r;
-    M8_setflags(vm, temp, *r, 1); /* Is 1 correct? */
+    M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
 }
 
 void M8_lsl(M8_VM *vm, uint8_t *r) {
     *r <<= 1;
     int16_t temp = *r;
-    M8_setflags(vm, temp, *r, 1); /* Is 1 correct? */
+    M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
 }
 
 // TODO: Fix M8_calc function.
@@ -142,7 +142,7 @@ void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op) {
         case MUL: temp = *r * vm->memory[vm->PC+1]; break;
         case DIV: temp = *r / vm->memory[vm->PC+1]; break;
     }
-    M8_setflags(vm, temp, *r, vm->memory[vm->PC+1]);
+    M8_change_flags(vm, temp, *r, vm->memory[vm->PC+1]);
     *r = (uint8_t) temp;
 }
 
@@ -506,7 +506,7 @@ int main() {
     }
     while (running) {
         M8_eval(vm, vm->memory[vm->PC]);
-        M8_printstate(vm);
+        M8_print_state(vm);
     }
     return 0;
 }
