@@ -133,16 +133,17 @@ void M8_lsl(M8_VM *vm, uint8_t *r) {
     M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
 }
 
-// TODO: Fix M8_calc function.
 void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op) {
-    int16_t temp = 1;
+    int16_t temp = 0;
+    uint8_t num = vm->memory[vm->PC+1];
     switch (op) {
-        case ADD: temp = *r + vm->memory[vm->PC+1]; break;
-        case SUB: temp = *r - vm->memory[vm->PC+1]; break;
-        case MUL: temp = *r * vm->memory[vm->PC+1]; break;
-        case DIV: temp = *r / vm->memory[vm->PC+1]; break;
+        case ADD: temp = *r + num; break;
+        case SUB: temp = *r - num; break;
+        case MUL: temp = *r * num; break;
+        case DIV: temp = *r / num; break;
+        default:exit(1);
     }
-    M8_change_flags(vm, temp, *r, vm->memory[vm->PC+1]);
+    M8_change_flags(vm, temp, *r, num);
     *r = (uint8_t) temp;
 }
 
@@ -287,6 +288,7 @@ void M8_eval(M8_VM *vm, char instruction) {
 
         case MULA:
             M8_calc(vm, &vm->A, MUL);
+            break;
 
         case MULB:
             M8_calc(vm, &vm->B, MUL);
@@ -500,7 +502,7 @@ void M8_eval(M8_VM *vm, char instruction) {
 int main() {
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
     assert(vm!=NULL);
-    uint8_t arr[256] ={LDA, 7, DECA, BNE, 1, LDB, 7, CLRA, DECA, TRFBA, STOP};
+    uint8_t arr[256] ={LDA, 7, DECA, BNE, 1, LDB, 6, CLRA, DECA, TRFBA, MULB, 2,STOP};
     for(int i=0; i < 256;i++){
         vm->memory[i] = arr[i];
     }
