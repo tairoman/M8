@@ -125,7 +125,7 @@ extern inline bool M8_get_bit_seven(int16_t x);
 extern inline void M8_set_flag(M8_VM *vm, M8_Flags f);
 extern inline void M8_clear_flag(M8_VM *vm, M8_Flags f);
 extern inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f);
-void M8_setflags(M8_VM *vm, int16_t result, int8_t op1, int8_t op2);
+void M8_setflags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2);
 void M8_printregisters(const M8_VM *vm);
 void M8_printflags(const M8_VM *vm);
 void M8_printstate(const M8_VM *vm);
@@ -145,6 +145,8 @@ void M8_branch(M8_VM *vm, uint8_t will_jump);
 void M8_push(M8_VM *vm, uint8_t r);
 void M8_pull(M8_VM *vm, uint8_t *r);
 void M8_transfer(uint8_t sender_r, uint8_t *receiver_r);
+void M8_jsr(M8_VM *vm);
+void M8_rts(M8_VM *vm);
 
 
 #endif

@@ -50,7 +50,7 @@ void M8_printstate(const M8_VM *vm) {
     M8_printflags(vm);
 }
 
-void M8_setflags(M8_VM *vm, int16_t result, int8_t op1, int8_t op2) {
+void M8_setflags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2) {
     if (result < M8_MIN || result > M8_MAX) {
         M8_set_flag(vm, M8_C);
     } else {
@@ -97,7 +97,7 @@ void M8_inc(M8_VM *vm, uint8_t *r) {
 }
 
 void M8_dec(M8_VM *vm, uint8_t *r) {
-    int16_t temp = (*r)-1;
+    int16_t temp = (*r)- 1;
     (*r)--;
     M8_setflags(vm, temp, *r, 1);
 }
@@ -164,6 +164,16 @@ void M8_pull(M8_VM *vm, uint8_t *r) {
 
 void M8_transfer(uint8_t sender_r, uint8_t *receiver_r){
     *receiver_r = sender_r;
+}
+
+void M8_jsr(M8_VM *vm){
+    vm->memory[++vm->SP] = vm->PC;
+    /* Mer register som ska upp på stacken? */
+    vm->PC = vm->memory[++vm->PC];
+}
+
+void M8_rts(M8_VM *vm){
+    vm->PC = vm->memory[--vm->SP];
 }
 
 void M8_eval(M8_VM *vm, char instruction) {
@@ -252,13 +262,11 @@ void M8_eval(M8_VM *vm, char instruction) {
             break;
 
         case JSR:
-            vm->memory[++vm->SP] = vm->PC;
-            /* Mer register som ska upp på stacken? */
-            vm->PC = vm->memory[++vm->PC];
+            M8_jsr(vm);
             break;
 
         case RTS:
-            vm->PC = vm->memory[--vm->SP];
+            M8_rts(vm);
             break;
 
         case ADDA:
