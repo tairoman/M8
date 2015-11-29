@@ -71,7 +71,7 @@ void M8_setflags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t
         M8_clear_flag(vm, M8_N);
     }
 
-    if (!result) { /* == 0 */
+    if (result == M8_MIN) {
         M8_set_flag(vm, M8_Z);
     } else {
         M8_clear_flag(vm, M8_Z);
