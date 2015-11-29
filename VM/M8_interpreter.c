@@ -163,17 +163,17 @@ void M8_pull(M8_VM *vm, uint8_t *r) {
     *r = vm->memory[vm->SP--];
 }
 
-void M8_transfer(uint8_t sender_r, uint8_t *receiver_r){
+void M8_transfer(uint8_t sender_r, uint8_t *receiver_r) {
     *receiver_r = sender_r;
 }
 
-void M8_jsr(M8_VM *vm){
+void M8_jsr(M8_VM *vm) {
     vm->memory[++vm->SP] = vm->PC;
     /* Mer register som ska upp på stacken? */
     vm->PC = vm->memory[++vm->PC];
 }
 
-void M8_rts(M8_VM *vm){
+void M8_rts(M8_VM *vm) {
     vm->PC = vm->memory[--vm->SP];
 }
 
