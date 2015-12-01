@@ -9,6 +9,8 @@
 #define M8_MIN 0
 #define M8_MAX 255
 
+//#define M8_DEBUG
+
 bool running = true;
 
 char *M8_read_file(char *filename) {
@@ -521,11 +523,34 @@ void M8_eval(M8_VM *vm, char instruction) {
 }
 
 int main() {
+
+    #ifndef M8_DEBUG
+    char *s = M8_read_file("test.txt");
+    char *token;
+    uint8_t array[256];
+    uint8_t val;
+    char *endptr;
+    int index = 0;
+
+    token = strtok(s, " ");
+    val = (uint8_t) strtol(token, &endptr, 2);
+    array[index++] = val;
+
+    while( token != NULL ) {
+        token = strtok(NULL, " ");
+        if (token == NULL) { continue;}
+
+        val = (uint8_t) strtol(token, &endptr, 2);
+        array[index++] = val;
+    }
+    #else
+    uint8_t array[256] ={LDA, 7, DECA, BNE, 1, LDB, 6, CLRA, DECA, TRFBA, MULB, 2, STOP};
+    #endif
+
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
     assert(vm!=NULL);
-    uint8_t arr[256] ={LDA, 7, DECA, BNE, 1, LDB, 6, CLRA, DECA, TRFBA, MULB, 2,STOP};
     for(int i=0; i < 256;i++){
-        vm->memory[i] = arr[i];
+        vm->memory[i] = array[i];
     }
     while (running) {
         M8_eval(vm, vm->memory[vm->PC]);
