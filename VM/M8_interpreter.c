@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "M8_interpreter.h"
 
@@ -10,7 +11,27 @@
 
 bool running = true;
 
-inline bool M8_get_bit_seven(int16_t x){
+char *M8_read_file(char *filename) {
+    char ch;
+    FILE *fp;
+    char *s = malloc(258*256*8*sizeof(char));
+    int index = 0;
+
+    fp = fopen(filename,"r");
+
+    assert(fp!=NULL);
+
+    while( ( ch = (char) fgetc(fp) ) != EOF ){
+        s[index++] = ch;
+    }
+    s[index] = '\0';
+
+    fclose(fp);
+    return s;
+
+}
+
+inline bool M8_get_bit_seven(int16_t x) {
     return ((x>>7) & 1) == 1;
 }
 
