@@ -67,31 +67,31 @@ typedef enum {
     CLRB = 52,  /* Clear B (=0) */
     CLRX = 53,  /* Clear X (=0) */
     CLRY = 54,  /* Clear Y (=0) */
-    BITA = 55,
-    BITB = 56,
-    INCA = 57,
-    INCB = 58,
-    INCX = 59,
-    INCY = 60,
-    DECA = 61,
-    DECB = 62,
-    DECX = 63,
-    DECY = 64,
-    LSRA = 65,
-    LSRB = 66,
-    LSLA = 67,
-    LSLB = 68,
-    LDA = 69,
-    LDB = 70,
-    LDX = 71,
-    LDY = 72,
-    ANDA = 73,
-    ANDB = 74,
-    STA = 75,
-    STB = 76,
-    STX = 77,
-    STY = 78,
-    STOP = 79,
+    BITA = 55,  /* A AND argument but doesn't change A, only flags */
+    BITB = 56,  /* A AND argument but doesn't change B, only flags */
+    INCA = 57,  /* Increase A by 1 */
+    INCB = 58,  /* Increase B by 1 */
+    INCX = 59,  /* Increase X by 1 */
+    INCY = 60,  /* Increase Y by 1 */
+    DECA = 61,  /* Decrease A by 1 */
+    DECB = 62,  /* Decrease B by 1 */
+    DECX = 63,  /* Decrease X by 1 */
+    DECY = 64,  /* Decrease Y by 1 */
+    LSRA = 65,  /* Logical right shift A */
+    LSRB = 66,  /* Logical right shift B */
+    LSLA = 67,  /* Logical left shift A */
+    LSLB = 68,  /* Logical left shift B */
+    LDA = 69,   /* Load A with argument */
+    LDB = 70,   /* Load B with argument */
+    LDX = 71,   /* Load X with argument */
+    LDY = 72,   /* Load Y with argument */
+    ANDA = 73,  /* A AND argument and does change A */
+    ANDB = 74,  /* B AND argument and does change A */
+    STA = 75,   /* Store value in A in memory (argument determines where) */
+    STB = 76,   /* Store value in B in memory (argument determines where) */
+    STX = 77,   /* Store value in X in memory (argument determines where) */
+    STY = 78,   /* Store value in Y in memory (argument determines where) */
+    STOP = 79,  /* Stop executing */
 } M8_Instructions;
 
 typedef enum {
