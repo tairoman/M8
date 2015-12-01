@@ -13,85 +13,85 @@
    - TODO: Interrupts?
 */
 typedef enum {
-    NOP,
-    PSHA,
-    PSHB,
-    PSHX,
-    PSHY,
-    PULA,
-    PULB,
-    PULX,
-    PULY,
-    TRFAB,
-    TRFBA,
-    TRFAX,
-    TRFXA,
-    TRFAY,
-    TRFYA,
-    TRFXY,
-    TRFYX,
-    TRFBX,
-    TRFXB,
-    TRFBY,
-    TRFYB,
-    JSR,
-    RTS,
-    ADDA,
-    ADDB,
-    SUBA,
-    SUBB,
-    MULA,
-    MULB,
-    DIVA,
-    DIVB,
-    CMPA,
-    CMPB,
-    CMPX,
-    CMPY,
-    BRA, /* Branch always */
-    BCC, /* Branch on C=0 */
-    BCS, /* Branch on C=1 */
-    BGT, /* Branch on greater than zero ((N xor V) or Z) = 0 */
-    BNE, /* Branch on not equal to zero (Z=0)*/
-    BEQ, /* Branch on equal to zero (Z=1)*/
-    BGE, /* Branch on greater than or equal to zero (N xor V) = 0 */
-    BHI, /* Branch if higher than zero (Z or C) = 0 */
-    BLE, /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
-    BLS, /* Branch on lower or same (C or Z) = 1 */
-    BLT, /* Branch on less than zero (N xor V) = 1 */
-    BMI, /* Branch on minus (N=1) */
-    BPL, /* Branch on plus (N=0) */
-    BVC, /* Branch if no overflow (V=0) */
-    BVS, /* Branch if overflow (V=1) */
-    CLRA,
-    CLRB,
-    CLRX,
-    CLRY,
-    BITA,
-    BITB,
-    INCA,
-    INCB,
-    INCX,
-    INCY,
-    DECA,
-    DECB,
-    DECX,
-    DECY,
-    LSRA,
-    LSRB,
-    LSLA,
-    LSLB,
-    LDA,
-    LDB,
-    LDX,
-    LDY,
-    ANDA,
-    ANDB,
-    STA,
-    STB,
-    STX,
-    STY,
-    STOP,
+    NOP = 0,    /* No Operation */
+    PSHA = 1,   /* Push A register to stack */
+    PSHB = 2,   /* Push B register to stack */
+    PSHX = 3,   /* Push X register to stack */
+    PSHY = 4,   /* Push Y register to stack */
+    PULA = 5,   /* Pull from stack to A register */
+    PULB = 6,   /* Pull from stack to B register */
+    PULX = 7,   /* Pull from stack to X register */
+    PULY = 8,   /* Pull from stack to Y register */
+    TRFAB = 9,  /* Transfer value in A to B */
+    TRFBA = 10, /* Transfer value in B to A */
+    TRFAX = 11, /* Transfer value in A to X */
+    TRFXA = 12, /* Transfer value in X to A */
+    TRFAY = 13, /* Transfer value in A to Y */
+    TRFYA = 14, /* Transfer value in Y to A */
+    TRFXY = 15, /* Transfer value in X to Y */
+    TRFYX = 16, /* Transfer value in Y to X */
+    TRFBX = 17, /* Transfer value in B to X */
+    TRFXB = 18, /* Transfer value in X to B */
+    TRFBY = 19, /* Transfer value in B to Y */
+    TRFYB = 20, /* Transfer value in Y to B */
+    JSR = 21,   /* Jump to subroutine */
+    RTS = 22,   /* Return from subroutine */
+    ADDA = 23,  /* Add the value in A with argument */
+    ADDB = 24,  /* Add the value in B with argument */
+    SUBA = 25,  /* Subtract the value in A with argument */
+    SUBB = 26,  /* Subtract value in B with argument */
+    MULA = 27,  /* Multiply the value in A with argument */
+    MULB = 28,  /* Multiply the value in B with argument */
+    DIVA = 29,  /* Divide the value in A with argument */
+    DIVB = 30,  /* Divide the value in B with argument */
+    CMPA = 31,  /* Compare A with argument */
+    CMPB = 32,  /* Compare B with argument */
+    CMPX = 33,  /* Compare X with argument */
+    CMPY = 34,  /* Compare Y with argument */
+    BRA = 35,   /* Branch always */
+    BCC = 36,   /* Branch on C=0 */
+    BCS = 37,   /* Branch on C=1 */
+    BGT = 38,   /* Branch on greater than zero ((N xor V) or Z) = 0 */
+    BNE = 39,   /* Branch on not equal to zero (Z=0)*/
+    BEQ = 40,   /* Branch on equal to zero (Z=1)*/
+    BGE = 41,   /* Branch on greater than or equal to zero (N xor V) = 0 */
+    BHI = 42,   /* Branch if higher than zero (Z or C) = 0 */
+    BLE = 43,   /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
+    BLS = 44,   /* Branch on lower or same (C or Z) = 1 */
+    BLT = 45,   /* Branch on less than zero (N xor V) = 1 */
+    BMI = 46,   /* Branch on minus (N=1) */
+    BPL = 47,   /* Branch on plus (N=0) */
+    BVC = 48,   /* Branch if no overflow (V=0) */
+    BVS = 50,   /* Branch if overflow (V=1) */
+    CLRA = 51,  /* Clear A (=0) */
+    CLRB = 52,  /* Clear B (=0) */
+    CLRX = 53,  /* Clear X (=0) */
+    CLRY = 54,  /* Clear Y (=0) */
+    BITA = 55,
+    BITB = 56,
+    INCA = 57,
+    INCB = 58,
+    INCX = 59,
+    INCY = 60,
+    DECA = 61,
+    DECB = 62,
+    DECX = 63,
+    DECY = 64,
+    LSRA = 65,
+    LSRB = 66,
+    LSLA = 67,
+    LSLB = 68,
+    LDA = 69,
+    LDB = 70,
+    LDX = 71,
+    LDY = 72,
+    ANDA = 73,
+    ANDB = 74,
+    STA = 75,
+    STB = 76,
+    STX = 77,
+    STY = 78,
+    STOP = 79,
 } M8_Instructions;
 
 typedef enum {
