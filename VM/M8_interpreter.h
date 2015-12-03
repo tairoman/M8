@@ -13,85 +13,85 @@
    - TODO: Interrupts?
 */
 typedef enum {
-    NOP = 0,    /* No Operation */
-    PSHA = 1,   /* Push A register to stack */
-    PSHB = 2,   /* Push B register to stack */
-    PSHX = 3,   /* Push X register to stack */
-    PSHY = 4,   /* Push Y register to stack */
-    PULA = 5,   /* Pull from stack to A register */
-    PULB = 6,   /* Pull from stack to B register */
-    PULX = 7,   /* Pull from stack to X register */
-    PULY = 8,   /* Pull from stack to Y register */
-    TRFAB = 9,  /* Transfer value in A to B */
-    TRFBA = 10, /* Transfer value in B to A */
-    TRFAX = 11, /* Transfer value in A to X */
-    TRFXA = 12, /* Transfer value in X to A */
-    TRFAY = 13, /* Transfer value in A to Y */
-    TRFYA = 14, /* Transfer value in Y to A */
-    TRFXY = 15, /* Transfer value in X to Y */
-    TRFYX = 16, /* Transfer value in Y to X */
-    TRFBX = 17, /* Transfer value in B to X */
-    TRFXB = 18, /* Transfer value in X to B */
-    TRFBY = 19, /* Transfer value in B to Y */
-    TRFYB = 20, /* Transfer value in Y to B */
-    JSR = 21,   /* Jump to subroutine */
-    RTS = 22,   /* Return from subroutine */
-    ADDA = 23,  /* Add the value in A with argument */
-    ADDB = 24,  /* Add the value in B with argument */
-    SUBA = 25,  /* Subtract the value in A with argument */
-    SUBB = 26,  /* Subtract value in B with argument */
-    MULA = 27,  /* Multiply the value in A with argument */
-    MULB = 28,  /* Multiply the value in B with argument */
-    DIVA = 29,  /* Divide the value in A with argument */
-    DIVB = 30,  /* Divide the value in B with argument */
-    CMPA = 31,  /* Compare A with argument */
-    CMPB = 32,  /* Compare B with argument */
-    CMPX = 33,  /* Compare X with argument */
-    CMPY = 34,  /* Compare Y with argument */
-    BRA = 35,   /* Branch always */
-    BCC = 36,   /* Branch on C=0 */
-    BCS = 37,   /* Branch on C=1 */
-    BGT = 38,   /* Branch on greater than zero ((N xor V) or Z) = 0 */
-    BNE = 39,   /* Branch on not equal to zero (Z=0)*/
-    BEQ = 40,   /* Branch on equal to zero (Z=1)*/
-    BGE = 41,   /* Branch on greater than or equal to zero (N xor V) = 0 */
-    BHI = 42,   /* Branch if higher than zero (Z or C) = 0 */
-    BLE = 43,   /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
-    BLS = 44,   /* Branch on lower or same (C or Z) = 1 */
-    BLT = 45,   /* Branch on less than zero (N xor V) = 1 */
-    BMI = 46,   /* Branch on minus (N=1) */
-    BPL = 47,   /* Branch on plus (N=0) */
-    BVC = 48,   /* Branch if no overflow (V=0) */
-    BVS = 50,   /* Branch if overflow (V=1) */
-    CLRA = 51,  /* Clear A (=0) */
-    CLRB = 52,  /* Clear B (=0) */
-    CLRX = 53,  /* Clear X (=0) */
-    CLRY = 54,  /* Clear Y (=0) */
-    BITA = 55,  /* A AND argument but doesn't change A, only flags */
-    BITB = 56,  /* A AND argument but doesn't change B, only flags */
-    INCA = 57,  /* Increase A by 1 */
-    INCB = 58,  /* Increase B by 1 */
-    INCX = 59,  /* Increase X by 1 */
-    INCY = 60,  /* Increase Y by 1 */
-    DECA = 61,  /* Decrease A by 1 */
-    DECB = 62,  /* Decrease B by 1 */
-    DECX = 63,  /* Decrease X by 1 */
-    DECY = 64,  /* Decrease Y by 1 */
-    LSRA = 65,  /* Logical right shift A */
-    LSRB = 66,  /* Logical right shift B */
-    LSLA = 67,  /* Logical left shift A */
-    LSLB = 68,  /* Logical left shift B */
-    LDA = 69,   /* Load A with argument */
-    LDB = 70,   /* Load B with argument */
-    LDX = 71,   /* Load X with argument */
-    LDY = 72,   /* Load Y with argument */
-    ANDA = 73,  /* A AND argument and does change A */
-    ANDB = 74,  /* B AND argument and does change A */
-    STA = 75,   /* Store value in A in memory (argument determines where) */
-    STB = 76,   /* Store value in B in memory (argument determines where) */
-    STX = 77,   /* Store value in X in memory (argument determines where) */
-    STY = 78,   /* Store value in Y in memory (argument determines where) */
-    STOP = 79,  /* Stop executing */
+    NOP =   0x00, /* No Operation */
+    PSHA =  0x01, /* Push A register to stack */
+    PSHB =  0x02, /* Push B register to stack */
+    PSHX =  0x03, /* Push X register to stack */
+    PSHY =  0x04, /* Push Y register to stack */
+    PULA =  0x05, /* Pull from stack to A register */
+    PULB =  0x06, /* Pull from stack to B register */
+    PULX =  0x07, /* Pull from stack to X register */
+    PULY =  0x08, /* Pull from stack to Y register */
+    TRFAB = 0x09, /* Transfer value in A to B */
+    TRFBA = 0x0A, /* Transfer value in B to A */
+    TRFAX = 0x0B, /* Transfer value in A to X */
+    TRFXA = 0x0C, /* Transfer value in X to A */
+    TRFAY = 0x0D, /* Transfer value in A to Y */
+    TRFYA = 0x0E, /* Transfer value in Y to A */
+    TRFXY = 0x0F, /* Transfer value in X to Y */
+    TRFYX = 0x10, /* Transfer value in Y to X */
+    TRFBX = 0x11, /* Transfer value in B to X */
+    TRFXB = 0x12, /* Transfer value in X to B */
+    TRFBY = 0x13, /* Transfer value in B to Y */
+    TRFYB = 0x14, /* Transfer value in Y to B */
+    JSR =   0x15, /* Jump to subroutine */
+    RTS =   0x16, /* Return from subroutine */
+    ADDA =  0x17, /* Add the value in A with argument */
+    ADDB =  0x18, /* Add the value in B with argument */
+    SUBA =  0x19, /* Subtract the value in A with argument */
+    SUBB =  0x1A, /* Subtract value in B with argument */
+    MULA =  0x1B, /* Multiply the value in A with argument */
+    MULB =  0x1C, /* Multiply the value in B with argument */
+    DIVA =  0x1D, /* Divide the value in A with argument */
+    DIVB =  0x1E, /* Divide the value in B with argument */
+    CMPA =  0x1F, /* Compare A with argument */
+    CMPB =  0x20, /* Compare B with argument */
+    CMPX =  0x21, /* Compare X with argument */
+    CMPY =  0x22, /* Compare Y with argument */
+    BRA =   0x23, /* Branch always */
+    BCC =   0x24, /* Branch on C=0 */
+    BCS =   0x25, /* Branch on C=1 */
+    BGT =   0x26, /* Branch on greater than zero ((N xor V) or Z) = 0 */
+    BNE =   0x27, /* Branch on not equal to zero (Z=0)*/
+    BEQ =   0x28, /* Branch on equal to zero (Z=1)*/
+    BGE =   0x29, /* Branch on greater than or equal to zero (N xor V) = 0 */
+    BHI =   0x2A, /* Branch if higher than zero (Z or C) = 0 */
+    BLE =   0x2B, /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
+    BLS =   0x2C, /* Branch on lower or same (C or Z) = 1 */
+    BLT =   0x2D, /* Branch on less than zero (N xor V) = 1 */
+    BMI =   0x2E, /* Branch on minus (N=1) */
+    BPL =   0x2F, /* Branch on plus (N=0) */
+    BVC =   0x30, /* Branch if no overflow (V=0) */
+    BVS =   0x31, /* Branch if overflow (V=1) */
+    CLRA =  0x32, /* Clear A (=0) */
+    CLRB =  0x33, /* Clear B (=0) */
+    CLRX =  0x34, /* Clear X (=0) */
+    CLRY =  0x35, /* Clear Y (=0) */
+    BITA =  0x36, /* A AND argument but doesn't change A, only flags */
+    BITB =  0x37, /* A AND argument but doesn't change B, only flags */
+    INCA =  0x38, /* Increase A by 1 */
+    INCB =  0x39, /* Increase B by 1 */
+    INCX =  0x3A, /* Increase X by 1 */
+    INCY =  0x3B, /* Increase Y by 1 */
+    DECA =  0x3C, /* Decrease A by 1 */
+    DECB =  0x3D, /* Decrease B by 1 */
+    DECX =  0x3E, /* Decrease X by 1 */
+    DECY =  0x3F, /* Decrease Y by 1 */
+    LSRA =  0x40, /* Logical right shift A */
+    LSRB =  0x41, /* Logical right shift B */
+    LSLA =  0x42, /* Logical left shift A */
+    LSLB =  0x43, /* Logical left shift B */
+    LDA =   0x44, /* Load A with argument */
+    LDB =   0x45, /* Load B with argument */
+    LDX =   0x46, /* Load X with argument */
+    LDY =   0x47, /* Load Y with argument */
+    ANDA =  0x48, /* A AND argument and does change A */
+    ANDB =  0x49, /* B AND argument and does change A */
+    STA =   0x4A, /* Store value in A in memory (argument determines where) */
+    STB =   0x4B, /* Store value in B in memory (argument determines where) */
+    STX =   0x4C, /* Store value in X in memory (argument determines where) */
+    STY =   0x4D, /* Store value in Y in memory (argument determines where) */
+    STOP =  0x4E, /* Stop executing */
 } M8_Instructions;
 
 typedef enum {
