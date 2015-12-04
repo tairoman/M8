@@ -14,7 +14,7 @@
 bool running = true;
 
 char *M8_read_file(char *filename) {
-    char ch;
+    int ch;
     FILE *fp;
     char *s = malloc(258*256*2*sizeof(char));
     int index = 0;
@@ -23,8 +23,8 @@ char *M8_read_file(char *filename) {
 
     assert(fp!=NULL);
 
-    while( ( ch = (char) fgetc(fp) ) != EOF ){
-        s[index++] = ch;
+    while( ( ch = fgetc(fp) ) != EOF ){
+        s[index++] = (char) ch;
     }
     s[index] = '\0';
 
