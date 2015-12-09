@@ -16,7 +16,7 @@ bool running = true;
 char *M8_read_file(char *filename) {
     int ch;
     FILE *fp;
-    char *s = malloc(258*256*2*sizeof(char));
+    char *s = malloc(2*256*2*sizeof(char));
     int index = 0;
 
     fp = fopen(filename,"r");
