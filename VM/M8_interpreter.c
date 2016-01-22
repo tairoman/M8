@@ -111,6 +111,10 @@ void M8_and(M8_VM *vm, uint8_t *r) {
     *r &= vm->memory[++vm->PC];
 }
 
+void M8_or(M8_VM *vm, uint8_t *r) {
+    *r |= vm->memory[++vm->PC];
+}
+
 void M8_store(M8_VM *vm, uint8_t r) {
     vm->memory[++vm->PC] = r;
 }
@@ -473,6 +477,13 @@ void M8_eval(M8_VM *vm, char instruction) {
         case ANDB:
             M8_and(vm, &vm->B);
             break;
+
+        case ORA:
+            M8_or(vm, &vm->A);
+            break;
+
+        case ORB:
+            M8_or(vm, &vm->B);
 
         case STA:
             M8_store(vm, vm->A);

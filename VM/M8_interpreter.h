@@ -87,6 +87,8 @@ typedef enum {
     LDY,
     ANDA,
     ANDB,
+    ORA,
+    ORB,
     STA,
     STB,
     STX,
@@ -132,6 +134,7 @@ void M8_print_state(const M8_VM *vm);
 void M8_eval(M8_VM *vm, char instruction);
 void M8_cmp(M8_VM *vm, uint8_t r);
 void M8_and(M8_VM *vm, uint8_t *r);
+void M8_or(M8_VM *vm, uint8_t *r);
 void M8_clr(M8_VM *vm, uint8_t *r);
 void M8_inc(M8_VM *vm, uint8_t *r);
 void M8_dec(M8_VM *vm, uint8_t *r);
