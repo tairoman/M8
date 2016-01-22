@@ -2,15 +2,38 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "M8_interpreter.h"
 
 #define M8_MIN 0
 #define M8_MAX 255
 
+//#define M8_DEBUG
+
 bool running = true;
 
-inline bool M8_get_bit_seven(int16_t x){
+char *M8_read_file(char *filename) {
+    int ch;
+    FILE *fp;
+    char *s = malloc(2*256*2*sizeof(char));
+    int index = 0;
+
+    fp = fopen(filename,"r");
+
+    assert(fp!=NULL);
+
+    while( ( ch = fgetc(fp) ) != EOF ){
+        s[index++] = (char) ch;
+    }
+    s[index] = '\0';
+
+    fclose(fp);
+    return s;
+
+}
+
+inline bool M8_get_bit_seven(int16_t x) {
     return ((x>>7) & 1) == 1;
 }
 
@@ -511,11 +534,34 @@ void M8_eval(M8_VM *vm, char instruction) {
 }
 
 int main() {
+
+    #ifndef M8_DEBUG
+    char *s = M8_read_file("test.txt");
+    char *token;
+    uint8_t array[256];
+    uint8_t val;
+    char *endptr;
+    int index = 0;
+
+    token = strtok(s, " ");
+    val = (uint8_t) strtol(token, &endptr, 16);
+    array[index++] = val;
+
+    while( token != NULL ) {
+        token = strtok(NULL, " ");
+        if (token == NULL) { continue;}
+
+        val = (uint8_t) strtol(token, &endptr, 16);
+        array[index++] = val;
+    }
+    #else
+    uint8_t array[256] ={LDA, 7, DECA, BNE, 1, LDB, 6, CLRA, DECA, TRFBA, MULB, 2, STOP};
+    #endif
+
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
     assert(vm!=NULL);
-    uint8_t arr[256] ={LDA, 7, DECA, BNE, 1, LDB, 6, CLRA, DECA, TRFBA, MULB, 2,STOP};
     for(int i=0; i < 256;i++){
-        vm->memory[i] = arr[i];
+        vm->memory[i] = array[i];
     }
     while (running) {
         M8_eval(vm, vm->memory[vm->PC]);
