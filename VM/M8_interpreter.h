@@ -13,87 +13,87 @@
    - TODO: Interrupts?
 */
 typedef enum {
-    NOP,
-    PSHA,
-    PSHB,
-    PSHX,
-    PSHY,
-    PULA,
-    PULB,
-    PULX,
-    PULY,
-    TRFAB,
-    TRFBA,
-    TRFAX,
-    TRFXA,
-    TRFAY,
-    TRFYA,
-    TRFXY,
-    TRFYX,
-    TRFBX,
-    TRFXB,
-    TRFBY,
-    TRFYB,
-    JSR,
-    RTS,
-    ADDA,
-    ADDB,
-    SUBA,
-    SUBB,
-    MULA,
-    MULB,
-    DIVA,
-    DIVB,
-    CMPA,
-    CMPB,
-    CMPX,
-    CMPY,
-    BRA, /* Branch always */
-    BCC, /* Branch on C=0 */
-    BCS, /* Branch on C=1 */
-    BGT, /* Branch on greater than zero ((N xor V) or Z) = 0 */
-    BNE, /* Branch on not equal to zero (Z=0)*/
-    BEQ, /* Branch on equal to zero (Z=1)*/
-    BGE, /* Branch on greater than or equal to zero (N xor V) = 0 */
-    BHI, /* Branch if higher than zero (Z or C) = 0 */
-    BLE, /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
-    BLS, /* Branch on lower or same (C or Z) = 1 */
-    BLT, /* Branch on less than zero (N xor V) = 1 */
-    BMI, /* Branch on minus (N=1) */
-    BPL, /* Branch on plus (N=0) */
-    BVC, /* Branch if no overflow (V=0) */
-    BVS, /* Branch if overflow (V=1) */
-    CLRA,
-    CLRB,
-    CLRX,
-    CLRY,
-    BITA,
-    BITB,
-    INCA,
-    INCB,
-    INCX,
-    INCY,
-    DECA,
-    DECB,
-    DECX,
-    DECY,
-    LSRA,
-    LSRB,
-    LSLA,
-    LSLB,
-    LDA,
-    LDB,
-    LDX,
-    LDY,
-    ANDA,
-    ANDB,
-    ORA,
-    ORB,
-    STA,
-    STB,
-    STX,
-    STY,
-    STOP,
+    NOP,   /* No operation */
+    PSHA,  /* Push A to stack */
+    PSHB,  /* Push B to stack */
+    PSHX,  /* Push X to stack */
+    PSHY,  /* Push Y to stack */
+    PULA,  /* Pull A from stack */
+    PULB,  /* Pull B from stack */
+    PULX,  /* Pull X from stack */
+    PULY,  /* Pull Y from stack */
+    TRFAB, /* Transfer value in A to B */
+    TRFBA, /* Transfer value in B to A */
+    TRFAX, /* Transfer value in A to X */
+    TRFXA, /* Transfer value in X to A */
+    TRFAY, /* Transfer value in A to Y */
+    TRFYA, /* Transfer value in Y to A */
+    TRFXY, /* Transfer value in X to Y */
+    TRFYX, /* Transfer value in Y to X */
+    TRFBX, /* Transfer value in B to X */
+    TRFXB, /* Transfer value in X to B */
+    TRFBY, /* Transfer value in B to Y */
+    TRFYB, /* Transfer value in Y to B */
+    JSR,   /* Jump to Subroutine */
+    RTS,   /* Return from Subroutine */
+    ADDA,  /* Add A to argument */
+    ADDB,  /* Add B to argument */
+    SUBA,  /* Subtract A to argument */
+    SUBB,  /* Subtract B to argument */
+    MULA,  /* Multiply A to argument */
+    MULB,  /* Multiply B to argument */
+    DIVA,  /* Divide A with argument */
+    DIVB,  /* Divide B with argument */
+    CMPA,  /* Compare argument with A */
+    CMPB,  /* Compare argument with B */
+    CMPX,  /* Compare argument with X */
+    CMPY,  /* Compare argument with Y */
+    BRA,   /* Branch always */
+    BCC,   /* Branch on C=0 */
+    BCS,   /* Branch on C=1 */
+    BGT,   /* Branch on greater than zero ((N xor V) or Z) = 0 */
+    BNE,   /* Branch on not equal to zero (Z=0)*/
+    BEQ,   /* Branch on equal to zero (Z=1)*/
+    BGE,   /* Branch on greater than or equal to zero (N xor V) = 0 */
+    BHI,   /* Branch if higher than zero (Z or C) = 0 */
+    BLE,   /* Branch on less than or equal to zero ((N xor V) or Z) = 1 */
+    BLS,   /* Branch on lower or same (C or Z) = 1 */
+    BLT,   /* Branch on less than zero (N xor V) = 1 */
+    BMI,   /* Branch on minus (N=1) */
+    BPL,   /* Branch on plus (N=0) */
+    BVC,   /* Branch if no overflow (V=0) */
+    BVS,   /* Branch if overflow (V=1) */
+    CLRA,  /* Clear A */
+    CLRB,  /* Clear B */
+    CLRX,  /* Clear X */
+    CLRY,  /* Clear Y */
+    BITA,  /* Bitwise AND between argument and A without changing A, only flags */
+    BITB,  /* Bitwise AND between argument and B without changing B, only flags */
+    INCA,  /* Increase A with 1 */
+    INCB,  /* Increase B with 1 */
+    INCX,  /* Increase X with 1 */
+    INCY,  /* Increase Y with 1 */
+    DECA,  /* Decrease A with 1 */
+    DECB,  /* Decrease B with 1 */
+    DECX,  /* Decrease X with 1 */
+    DECY,  /* Decrease Y with 1 */
+    LSRA,  /* Logical shift right (add 0 to the left) on A */
+    LSRB,  /* Logical shift right (add 0 to the left) on B */
+    LSLA,  /* Logical shift left (add 0 to the left) on A */
+    LSLB,  /* Logical shift left (add 0 to the left) on B */
+    LDA,   /* Load A with argument */
+    LDB,   /* Load B with argument */
+    LDX,   /* Load X with argument */
+    LDY,   /* Load Y with argument */
+    ANDA,  /* Bitwise AND between argument and A, changing A and flags */
+    ANDB,  /* Bitwise AND between argument and B, changing B and flags */
+    ORA,   /* Bitwise OR between argument and A, changing A and flags */
+    ORB,   /* Bitwise OR between argument and B, changing B and flags */
+    STA,   /* Store A in memory */
+    STB,   /* Store B in memory */
+    STX,   /* Store X in memory */
+    STY,   /* Store Y in memory */
+    STOP,  /* Stop executing */
 } M8_Instructions;
 
 typedef enum {
