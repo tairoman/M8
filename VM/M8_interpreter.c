@@ -101,8 +101,9 @@ void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const in
     }
 }
 
-void M8_cmp(M8_VM *vm, uint8_t r) {
+void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute) {
     uint8_t op = vm->memory[vm->PC+1];
+    if (is_absolute) {op = vm->memory[op];}
     int16_t temp = r - op;
     M8_change_flags(vm, temp, r, op);
     vm->PC++;
@@ -125,25 +126,32 @@ void M8_dec(M8_VM *vm, uint8_t *r) {
     M8_change_flags(vm, temp, *r, 1);
 }
 
-void M8_load(M8_VM *vm, uint8_t *r) {
-    *r = vm->memory[++vm->PC];
+void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute) {
+    uint8_t num = vm->memory[++vm->PC];
+    if (is_absolute) {num = vm->memory[num];}
+    *r = num;
     M8_change_flags(vm, *r,0,0);
 }
 
-void M8_and(M8_VM *vm, uint8_t *r) {
-    *r &= vm->memory[++vm->PC];
+void M8_and(M8_VM *vm, uint8_t *r, bool is_absolute) {
+    uint8_t num = vm->memory[++vm->PC];
+    if (is_absolute) {num = vm->memory[num];}
+    *r &= num;
 }
 
-void M8_or(M8_VM *vm, uint8_t *r) {
-    *r |= vm->memory[++vm->PC];
+void M8_or(M8_VM *vm, uint8_t *r, bool is_absolute) {
+    uint8_t num = vm->memory[++vm->PC];
+    if (is_absolute) {num = vm->memory[num];}
+    *r |= num;
 }
 
 void M8_store(M8_VM *vm, uint8_t r) {
     vm->memory[++vm->PC] = r;
 }
 
-void M8_bit(M8_VM *vm, uint8_t r) {
+void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute) {
     uint8_t op = vm->memory[++vm->PC];
+    if (is_absolute) {op = vm->memory[op];}
     int16_t temp = r & op;
     M8_change_flags(vm, temp, r, op);
 }
@@ -160,9 +168,10 @@ void M8_lsl(M8_VM *vm, uint8_t *r) {
     M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
 }
 
-void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op) {
+void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute) {
     int16_t temp = 0;
     uint8_t num = vm->memory[vm->PC+1];
+    if (is_absolute) {num = vm->memory[num];}
     switch (op) {
         case ADD: temp = *r + num; break;
         case SUB: temp = *r - num; break;
@@ -205,6 +214,7 @@ void M8_rts(M8_VM *vm) {
 }
 
 void M8_eval(M8_VM *vm, char instruction) {
+    uint8_t num;
     switch (instruction) {
 
         case NOP: break;
@@ -297,52 +307,100 @@ void M8_eval(M8_VM *vm, char instruction) {
             M8_rts(vm);
             break;
 
-        case ADDA:
-            M8_calc(vm, &vm->A, ADD);
+        case ADDAi:
+            M8_calc(vm, &vm->A, ADD, false);
             break;
 
-        case ADDB:
-            M8_calc(vm, &vm->B, ADD);
+        case ADDAa:
+            M8_calc(vm, &vm->A, ADD, true);
             break;
 
-        case SUBA:
-            M8_calc(vm, &vm->A, SUB);
+        case ADDBi:
+            M8_calc(vm, &vm->B, ADD, false);
             break;
 
-        case SUBB:
-            M8_calc(vm, &vm->B, SUB);
+        case ADDBa:
+            M8_calc(vm, &vm->B, ADD, true);
             break;
 
-        case MULA:
-            M8_calc(vm, &vm->A, MUL);
+        case SUBAi:
+            M8_calc(vm, &vm->A, SUB, false);
             break;
 
-        case MULB:
-            M8_calc(vm, &vm->B, MUL);
+        case SUBAa:
+            M8_calc(vm, &vm->A, SUB, true);
             break;
 
-        case DIVA:
-            M8_calc(vm, &vm->A, DIV);
+        case SUBBi:
+            M8_calc(vm, &vm->B, SUB, false);
             break;
 
-        case DIVB:
-            M8_calc(vm, &vm->B, DIV);
+        case SUBBa:
+            M8_calc(vm, &vm->B, SUB, true);
             break;
 
-        case CMPA:
-            M8_cmp(vm, vm->A);
+        case MULAi:
+            M8_calc(vm, &vm->A, MUL, false);
             break;
 
-        case CMPB:
-            M8_cmp(vm, vm->B);
+        case MULAa:
+            M8_calc(vm, &vm->A, MUL, true);
             break;
 
-        case CMPX:
-            M8_cmp(vm, vm->X);
+        case MULBi:
+            M8_calc(vm, &vm->B, MUL, false);
             break;
 
-        case CMPY:
-            M8_cmp(vm, vm->Y);
+        case MULBa:
+            M8_calc(vm, &vm->B, MUL, true);
+            break;
+
+        case DIVAi:
+            M8_calc(vm, &vm->A, DIV, false);
+            break;
+
+        case DIVAa:
+            M8_calc(vm, &vm->A, DIV, true);
+            break;
+
+        case DIVBi:
+            M8_calc(vm, &vm->B, DIV, false);
+            break;
+
+        case DIVBa:
+            M8_calc(vm, &vm->B, DIV, true);
+            break;
+
+        case CMPAi:
+            M8_cmp(vm, vm->A, false);
+            break;
+
+        case CMPAa:
+            M8_cmp(vm, vm->A, true);
+            break;
+
+        case CMPBi:
+            M8_cmp(vm, vm->B, false);
+            break;
+
+        case CMPBa:
+            M8_cmp(vm, vm->B, true);
+            break;
+
+        case CMPXi:
+            M8_cmp(vm, vm->X, false);
+            break;
+
+        case CMPXa:
+            M8_cmp(vm, vm->X, true);
+            break;
+
+        case CMPYi:
+            M8_cmp(vm, vm->Y, false);
+            break;
+
+        case CMPYa:
+            M8_cmp(vm, vm->Y, true);
             break;
 
         case BRA:
@@ -405,6 +463,11 @@ void M8_eval(M8_VM *vm, char instruction) {
             M8_branch(vm, (uint8_t) M8_get_flag(vm, M8_V));
             break;
 
+        case CLR:
+            num = vm->memory[++vm->PC];
+            M8_clr(vm, &vm->memory[num]);
+            break;
+
         case CLRA:
             M8_clr(vm, &vm->A);
             break;
@@ -421,12 +484,25 @@ void M8_eval(M8_VM *vm, char instruction) {
             M8_clr(vm, &vm->Y);
             break;
 
-        case BITA:
-            M8_bit(vm, vm->A);
+        case BITAi:
+            M8_bit(vm, vm->A, false);
             break;
 
-        case BITB:
-            M8_bit(vm, vm->B);
+        case BITAa:
+            M8_bit(vm, vm->A, true);
+            break;
+
+        case BITBi:
+            M8_bit(vm, vm->B, false);
+            break;
+
+        case BITBa:
+            M8_bit(vm, vm->B, true);
+            break;
+
+        case INC:
+            num = vm->memory[++vm->PC];
+            M8_inc(vm, &vm->memory[num]);
             break;
 
         case INCA:
@@ -477,36 +553,69 @@ void M8_eval(M8_VM *vm, char instruction) {
             M8_lsl(vm, &vm->B);
             break;
 
-        case LDA:
-            M8_load(vm, &vm->A);
+        case LDAi:
+            M8_load(vm, &vm->A, false);
             break;
 
-        case LDB:
-            M8_load(vm, &vm->B);
+        case LDAa:
+            M8_load(vm, &vm->A, true);
             break;
 
-        case LDX:
-            M8_load(vm, &vm->X);
+        case LDBi:
+            M8_load(vm, &vm->B, false);
             break;
 
-        case LDY:
-            M8_load(vm, &vm->Y);
+        case LDBa:
+            M8_load(vm, &vm->B, true);
             break;
 
-        case ANDA:
-            M8_and(vm, &vm->A);
+        case LDXi:
+            M8_load(vm, &vm->X, false);
             break;
 
-        case ANDB:
-            M8_and(vm, &vm->B);
+        case LDXa:
+            M8_load(vm, &vm->X, true);
             break;
 
-        case ORA:
-            M8_or(vm, &vm->A);
+        case LDYi:
+            M8_load(vm, &vm->Y, false);
             break;
 
-        case ORB:
-            M8_or(vm, &vm->B);
+        case LDYa:
+            M8_load(vm, &vm->Y, true);
+            break;
+
+        case ANDAi:
+            M8_and(vm, &vm->A, false);
+            break;
+
+        case ANDAa:
+            M8_and(vm, &vm->A, true);
+            break;
+
+        case ANDBi:
+            M8_and(vm, &vm->B, false);
+            break;
+
+        case ANDBa:
+            M8_and(vm, &vm->B, true);
+            break;
+
+        case ORAi:
+            M8_or(vm, &vm->A, false);
+            break;
+
+        case ORAa:
+            M8_or(vm, &vm->A, true);
+            break;
+
+        case ORBi:
+            M8_or(vm, &vm->B, false);
+            break;
+
+        case ORBa:
+            M8_or(vm, &vm->B, true);
+            break;
 
         case STA:
             M8_store(vm, vm->A);
@@ -528,7 +637,7 @@ void M8_eval(M8_VM *vm, char instruction) {
             running = false;
             break;
 
-            default:exit(1);
+        default:exit(155);
     }
     vm->PC++;
 }
@@ -555,7 +664,7 @@ int main() {
         array[index++] = val;
     }
     #else
-    uint8_t array[256] ={LDA, 7, DECA, BNE, 1, LDB, 6, CLRA, DECA, TRFBA, MULB, 2, STOP};
+    uint8_t array[256] ={LDAi, 7, DECA, BNE, 1, LDBi, 6, CLRA, DECA, TRFBA, MULBi, 2, STOP};
     #endif
 
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
