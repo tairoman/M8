@@ -1,3 +1,6 @@
+//vim: set filetype=c:
+//vim: set ft=c:
+
 /*
     Regarding suffix on certain instructions:
 
