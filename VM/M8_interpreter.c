@@ -5,7 +5,7 @@
 #include <string.h>
 
 #include "M8_interpreter.h"
-#include "../M8_instructions.h"
+#include "M8_instructions.h"
 
 #define M8_MIN 0
 #define M8_MAX 255

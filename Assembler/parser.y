@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../M8_instructions.h"
+#include "../VM/M8_instructions.h"
 
 FILE *fp;
 
