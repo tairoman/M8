@@ -1,3 +1,8 @@
 /VM/*.exe
 /VM/*.out
 /.idea/*
+/Assembler/myEXE
+*.txt
+*.tab.c
+*.tab.h
+*.yy.c
