@@ -12,14 +12,37 @@ extern char *yytext;
 extern FILE* yyin;
 void yyerror(const char *s);
 
+typedef struct {
+    char *key;
+    int *value;
+} Map;
+
+Map table[100];
+int count = 0;
+
+int lookup(char *k){
+    for(int i=0; i<100; i++){
+        if (strcmp(k, table[i].key) != 0){
+            return table[i].value;
+        }
+    }
+    return -1;
+}
+
+//TODO: Fix ADDRESS and IDENTIFIER
+//TODO: Let label have COLON
+
 %}
 
 %union{
     int val;
+    char *var;
 }
 
 %token NUMBER
-%token IDENTIFIER ADDRESS COMMA COLON
+%token COMMA COLON
+%token <val> ADDRESS
+%token <var> IDENTIFIER
 
 %token I_NOP
 %token I_JSR I_RTS
@@ -57,7 +80,7 @@ program
     | program label
     ;
 
-label: IDENTIFIER COLON
+label: IDENTIFIER {table[0].key = yytext;table[0].value = count;fprintf(fp," %02x", count);}
      ;
 
 instruction
@@ -146,297 +169,297 @@ instruction
     | instr_stop
     ;
 
-instr_nop: I_NOP        {fprintf(fp," %02x", NOP);}
+instr_nop: I_NOP        {count++;fprintf(fp," %02x", NOP);}
     ;
 
-instr_psha: I_PSHA      {fprintf(fp," %02x", PSHA);}
+instr_psha: I_PSHA      {count++;fprintf(fp," %02x", PSHA);}
     ;
 
-instr_pshb: I_PSHB      {fprintf(fp," %02x", PSHB);}
+instr_pshb: I_PSHB      {count++;fprintf(fp," %02x", PSHB);}
     ;
 
-instr_pshx: I_PSHX      {fprintf(fp," %02x", PSHX);}
+instr_pshx: I_PSHX      {count++;fprintf(fp," %02x", PSHX);}
     ;
 
-instr_pshy: I_PSHY      {fprintf(fp," %02x", PSHY);}
+instr_pshy: I_PSHY      {count++;fprintf(fp," %02x", PSHY);}
     ;
 
-instr_pula: I_PULA      {fprintf(fp," %02x", PULA);}
+instr_pula: I_PULA      {count++;fprintf(fp," %02x", PULA);}
     ;
 
-instr_pulb: I_PULB      {fprintf(fp," %02x", PULB);}
+instr_pulb: I_PULB      {count++;fprintf(fp," %02x", PULB);}
     ;
 
-instr_pulx: I_PULX      {fprintf(fp," %02x", PULX);}
+instr_pulx: I_PULX      {count++;fprintf(fp," %02x", PULX);}
     ;
 
-instr_puly: I_PULY      {fprintf(fp," %02x", PULY);}
+instr_puly: I_PULY      {count++;fprintf(fp," %02x", PULY);}
     ;
 
-instr_trfab: I_TRFAB    {fprintf(fp," %02x", TRFAB);}
+instr_trfab: I_TRFAB    {count++;fprintf(fp," %02x", TRFAB);}
     ;
 
-instr_trfba: I_TRFBA    {fprintf(fp," %02x", TRFBA);}
+instr_trfba: I_TRFBA    {count++;fprintf(fp," %02x", TRFBA);}
     ;
 
-instr_trfax: I_TRFAX    {fprintf(fp," %02x", TRFAX);}
+instr_trfax: I_TRFAX    {count++;fprintf(fp," %02x", TRFAX);}
     ;
 
-instr_trfxa: I_TRFXA    {fprintf(fp," %02x", TRFXA);}
+instr_trfxa: I_TRFXA    {count++;fprintf(fp," %02x", TRFXA);}
     ;
 
-instr_trfay: I_TRFAY    {fprintf(fp," %02x", TRFAY);}
+instr_trfay: I_TRFAY    {count++;fprintf(fp," %02x", TRFAY);}
     ;
 
-instr_trfya: I_TRFYA    {fprintf(fp," %02x", TRFYA);}
+instr_trfya: I_TRFYA    {count++;fprintf(fp," %02x", TRFYA);}
     ;
 
-instr_trfxy: I_TRFXY    {fprintf(fp," %02x", TRFXY);}
+instr_trfxy: I_TRFXY    {count++;fprintf(fp," %02x", TRFXY);}
     ;
 
-instr_trfyx: I_TRFYX    {fprintf(fp," %x", TRFYX);}
+instr_trfyx: I_TRFYX    {count++;fprintf(fp," %x", TRFYX);}
     ;
 
-instr_trfbx: I_TRFBX    {fprintf(fp," %x", TRFBX);}
+instr_trfbx: I_TRFBX    {count++;fprintf(fp," %x", TRFBX);}
     ;
 
-instr_trfxb: I_TRFXB    {fprintf(fp," %x", TRFXB);}
+instr_trfxb: I_TRFXB    {count++;fprintf(fp," %x", TRFXB);}
     ;
 
-instr_trfby: I_TRFBY    {fprintf(fp," %x", TRFBY);}
+instr_trfby: I_TRFBY    {count++;fprintf(fp," %x", TRFBY);}
     ;
 
-instr_trfyb: I_TRFYB    {fprintf(fp," %x", TRFYB);}
+instr_trfyb: I_TRFYB    {count++;fprintf(fp," %x", TRFYB);}
     ;
 
-instr_jsr: I_JSR ADDRESS NUMBER {fprintf(fp, " %x %s", JSR, yytext);}
+instr_jsr: I_JSR ADDRESS NUMBER {count+=3;fprintf(fp, " %x %s", JSR, yytext);}
     ;
 
-instr_rts: I_RTS        {fprintf(fp, " %x", RTS);}
+instr_rts: I_RTS        {count++;fprintf(fp, " %x", RTS);}
     ;
 
 instr_adda
-    : I_ADDA NUMBER             {fprintf(fp, " %x %s", ADDAi, yytext);}
-    | I_ADDA ADDRESS NUMBER     {fprintf(fp, " %x %s", ADDAa, yytext);}
+    : I_ADDA NUMBER             {count+=2;fprintf(fp, " %x %s", ADDAi, yytext);}
+    | I_ADDA ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", ADDAa, yytext);}
     ;
 
 instr_addb
-    : I_ADDB NUMBER             {fprintf(fp, " %x %s", ADDBi, yytext);}
-    | I_ADDB ADDRESS NUMBER     {fprintf(fp, " %x %s", ADDBa, yytext);}
+    : I_ADDB NUMBER             {count+=2;fprintf(fp, " %x %s", ADDBi, yytext);}
+    | I_ADDB ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", ADDBa, yytext);}
     ;
 
 instr_suba
-    : I_SUBA NUMBER             {fprintf(fp, " %x %s", SUBAi, yytext);}
-    | I_SUBA ADDRESS NUMBER     {fprintf(fp, " %x %s", SUBAa, yytext);}
+    : I_SUBA NUMBER             {count+=2;fprintf(fp, " %x %s", SUBAi, yytext);}
+    | I_SUBA ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", SUBAa, yytext);}
     ;
 
 instr_subb
-    : I_SUBB NUMBER             {fprintf(fp, " %x %s", SUBBi, yytext);}
-    | I_SUBB ADDRESS NUMBER     {fprintf(fp, " %x %s", SUBBa, yytext);}
+    : I_SUBB NUMBER             {count+=2;fprintf(fp, " %x %s", SUBBi, yytext);}
+    | I_SUBB ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", SUBBa, yytext);}
     ;
 
 instr_mula
-    : I_MULA NUMBER             {fprintf(fp, " %x %s", MULAi, yytext);}
-    | I_MULA ADDRESS NUMBER     {fprintf(fp, " %x %s", MULAa, yytext);}
+    : I_MULA NUMBER             {count+=2;fprintf(fp, " %x %s", MULAi, yytext);}
+    | I_MULA ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", MULAa, yytext);}
     ;
 
 instr_mulb
-    : I_MULB NUMBER             {fprintf(fp, " %x %s", MULBi, yytext);}
-    | I_MULB ADDRESS NUMBER     {fprintf(fp, " %x %s", MULBa, yytext);}
+    : I_MULB NUMBER             {count+=2;fprintf(fp, " %x %s", MULBi, yytext);}
+    | I_MULB ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", MULBa, yytext);}
     ;
 
 instr_diva
-    : I_DIVA NUMBER             {fprintf(fp, " %x %s", DIVAi, yytext);}
-    | I_DIVA ADDRESS NUMBER     {fprintf(fp, " %x %s", DIVAa, yytext);}
+    : I_DIVA NUMBER             {count+=2;fprintf(fp, " %x %s", DIVAi, yytext);}
+    | I_DIVA ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", DIVAa, yytext);}
     ;
 
 instr_divb
-    : I_DIVB NUMBER             {fprintf(fp, " %x %s", DIVBi, yytext);}
-    | I_DIVB ADDRESS NUMBER     {fprintf(fp, " %x %s", DIVBa, yytext);}
+    : I_DIVB NUMBER             {count+=2;fprintf(fp, " %x %s", DIVBi, yytext);}
+    | I_DIVB ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", DIVBa, yytext);}
     ;
 
 instr_cmpa
-    : I_CMPA NUMBER             {fprintf(fp, " %x %s", CMPAi, yytext);}
-    | I_CMPA ADDRESS NUMBER     {fprintf(fp, " %x %s", CMPAa, yytext);}
+    : I_CMPA NUMBER             {count+=2;fprintf(fp, " %x %s", CMPAi, yytext);}
+    | I_CMPA ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", CMPAa, yytext);}
     ;
 
 instr_cmpb
-    : I_CMPB NUMBER             {fprintf(fp, " %x %s", CMPBi, yytext);}
-    | I_CMPB ADDRESS NUMBER     {fprintf(fp, " %x %s", CMPBa, yytext);}
+    : I_CMPB NUMBER             {count+=2;fprintf(fp, " %x %s", CMPBi, yytext);}
+    | I_CMPB ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", CMPBa, yytext);}
     ;
 
 instr_cmpx
-    : I_CMPX NUMBER             {fprintf(fp, " %x %s", CMPXi, yytext);}
-    | I_CMPX ADDRESS NUMBER     {fprintf(fp, " %x %s", CMPXa, yytext);}
+    : I_CMPX NUMBER             {count+=2;fprintf(fp, " %x %s", CMPXi, yytext);}
+    | I_CMPX ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", CMPXa, yytext);}
     ;
 
 instr_cmpy
-    : I_CMPY NUMBER             {fprintf(fp, " %x %s", CMPYi, yytext);}
-    | I_CMPY ADDRESS NUMBER     {fprintf(fp, " %x %s", CMPYa, yytext);}
+    : I_CMPY NUMBER             {count+=2;fprintf(fp, " %x %s", CMPYi, yytext);}
+    | I_CMPY ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", CMPYa, yytext);}
     ;
 
-instr_bra: I_BRA ADDRESS NUMBER   {fprintf(fp, " %x %s", BRA, yytext);}
+instr_bra: I_BRA IDENTIFIER   {count+=2;fprintf(fp, " %x %02x", BRA,lookup(yytext));}
     ;
 
-instr_bcc: I_BCC ADDRESS NUMBER   {fprintf(fp, " %x %s", BCC, yytext);}
+instr_bcc: I_BCC ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BCC, yytext);}
     ;
 
-instr_bcs: I_BCS ADDRESS NUMBER   {fprintf(fp, " %x %s", BCS, yytext);}
+instr_bcs: I_BCS ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BCS, yytext);}
     ;
 
-instr_bgt: I_BGT ADDRESS NUMBER   {fprintf(fp, " %x %s", BGT, yytext);}
+instr_bgt: I_BGT ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BGT, yytext);}
     ;
 
-instr_bne: I_BNE ADDRESS NUMBER   {fprintf(fp, " %x %s", BNE, yytext);}
+instr_bne: I_BNE ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BNE, yytext);}
     ;
 
-instr_beq: I_BEQ ADDRESS NUMBER   {fprintf(fp, " %x %s", BEQ, yytext);}
+instr_beq: I_BEQ ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BEQ, yytext);}
     ;
 
-instr_bge: I_BGE ADDRESS NUMBER   {fprintf(fp, " %x %s", BGE, yytext);}
+instr_bge: I_BGE ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BGE, yytext);}
     ;
 
-instr_bhi: I_BHI ADDRESS NUMBER   {fprintf(fp, " %x %s", BHI, yytext);}
+instr_bhi: I_BHI ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BHI, yytext);}
     ;
 
-instr_ble: I_BLE ADDRESS NUMBER   {fprintf(fp, " %x %s", BLE, yytext);}
+instr_ble: I_BLE ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BLE, yytext);}
     ;
 
-instr_bls: I_BLS ADDRESS NUMBER   {fprintf(fp, " %x %s", BLS, yytext);}
+instr_bls: I_BLS ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BLS, yytext);}
     ;
 
-instr_blt: I_BLT ADDRESS NUMBER   {fprintf(fp, " %x %s", BLT, yytext);}
+instr_blt: I_BLT ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BLT, yytext);}
     ;
 
-instr_bmi: I_BMI ADDRESS NUMBER   {fprintf(fp, " %x %s", BMI, yytext);}
+instr_bmi: I_BMI ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BMI, yytext);}
     ;
 
-instr_bpl: I_BPL ADDRESS NUMBER   {fprintf(fp, " %x %s", BPL, yytext);}
+instr_bpl: I_BPL ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BPL, yytext);}
     ;
 
-instr_bvc: I_BVC ADDRESS NUMBER   {fprintf(fp, " %x %s", BVC, yytext);}
+instr_bvc: I_BVC ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BVC, yytext);}
     ;
 
-instr_bvs: I_BVS ADDRESS NUMBER   {fprintf(fp, " %x %s", BVS, yytext);}
+instr_bvs: I_BVS ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", BVS, yytext);}
     ;
 
-instr_clr: I_CLR ADDRESS NUMBER   {fprintf(fp, " %x %s", CLR, yytext);}
+instr_clr: I_CLR ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", CLR, yytext);}
     ;
 
-instr_clra: I_CLRA  {fprintf(fp, " %x", CLRA);}
+instr_clra: I_CLRA  {count++;fprintf(fp, " %x", CLRA);}
     ;
 
-instr_clrb: I_CLRB  {fprintf(fp, " %x", CLRB);}
+instr_clrb: I_CLRB  {count++;fprintf(fp, " %x", CLRB);}
     ;
 
-instr_clrx: I_CLRX  {fprintf(fp, " %x", CLRX);}
+instr_clrx: I_CLRX  {count++;fprintf(fp, " %x", CLRX);}
     ;
 
-instr_clry: I_CLRY  {fprintf(fp, " %x", CLRY);}
+instr_clry: I_CLRY  {count++;fprintf(fp, " %x", CLRY);}
     ;
 
 instr_bita
-    : I_BITA NUMBER             {fprintf(fp, " %x %s", BITAi, yytext);}
-    | I_BITA ADDRESS NUMBER     {fprintf(fp, " %x %s", BITAa, yytext);}
+    : I_BITA NUMBER             {count+=2;fprintf(fp, " %x %s", BITAi, yytext);}
+    | I_BITA ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", BITAa, yytext);}
     ;
 
 instr_bitb
-    : I_BITB NUMBER             {fprintf(fp, " %x %s", BITBi, yytext);}
-    | I_BITB ADDRESS NUMBER     {fprintf(fp, " %x %s", BITBa, yytext);}
+    : I_BITB NUMBER             {count+=2;fprintf(fp, " %x %s", BITBi, yytext);}
+    | I_BITB ADDRESS NUMBER     {count+=3;fprintf(fp, " %x %s", BITBa, yytext);}
     ;
 
-instr_inc: I_INC ADDRESS NUMBER   {fprintf(fp, " %x %s", CLR, yytext);}
+instr_inc: I_INC ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", CLR, yytext);}
     ;
 
-instr_inca: I_INCA  {fprintf(fp, " %x", INCA);}
+instr_inca: I_INCA  {count++;fprintf(fp, " %x", INCA);}
     ;
 
-instr_incb: I_INCB  {fprintf(fp, " %x", INCB);}
+instr_incb: I_INCB  {count++;fprintf(fp, " %x", INCB);}
     ;
 
-instr_incx: I_INCX  {fprintf(fp, " %x", INCX);}
+instr_incx: I_INCX  {count++;fprintf(fp, " %x", INCX);}
     ;
 
-instr_incy: I_INCY  {fprintf(fp, " %x", INCY);}
+instr_incy: I_INCY  {count++;fprintf(fp, " %x", INCY);}
     ;
 
-instr_deca: I_DECA  {fprintf(fp, " %x", DECA);}
+instr_deca: I_DECA  {count++;fprintf(fp, " %x", DECA);}
     ;
 
-instr_decb: I_DECB  {fprintf(fp, " %x", DECB);}
+instr_decb: I_DECB  {count++;fprintf(fp, " %x", DECB);}
     ;
 
-instr_decx: I_DECX  {fprintf(fp, " %x", DECX);}
+instr_decx: I_DECX  {count++;fprintf(fp, " %x", DECX);}
     ;
 
-instr_decy: I_DECY  {fprintf(fp, " %x", DECY);}
+instr_decy: I_DECY  {count++;fprintf(fp, " %x", DECY);}
     ;
 
-instr_lsra: I_LSRA  {fprintf(fp, " %x", LSRA);}
+instr_lsra: I_LSRA  {count++;fprintf(fp, " %x", LSRA);}
     ;
 
-instr_lsrb: I_LSRB  {fprintf(fp, " %x", LSRB);}
+instr_lsrb: I_LSRB  {count++;fprintf(fp, " %x", LSRB);}
     ;
 
-instr_lsla: I_LSLA  {fprintf(fp, " %x", LSLA);}
+instr_lsla: I_LSLA  {count++;fprintf(fp, " %x", LSLA);}
     ;
 
-instr_lslb: I_LSLB  {fprintf(fp, " %x", LSLB);}
+instr_lslb: I_LSLB  {count++;fprintf(fp, " %x", LSLB);}
     ;
 
 instr_lda
-    : I_LDA NUMBER          {fprintf(fp, " %x %s", LDAi, yytext);}
-    | I_LDA ADDRESS NUMBER  {fprintf(fp, " %x %s", LDAa, yytext);}
+    : I_LDA NUMBER          {count += 2;fprintf(fp, " %x %s", LDAi, yytext);}
+    | I_LDA ADDRESS NUMBER  {count+=3;fprintf(fp, " %x %s", LDAa, yytext);}
     ;
 
 instr_ldb
-    : I_LDB NUMBER          {fprintf(fp, " %x %s", LDBi, yytext);}
-    | I_LDB ADDRESS NUMBER  {fprintf(fp, " %x %s", LDBa, yytext);}
+    : I_LDB NUMBER          {count+=2;fprintf(fp, " %x %s", LDBi, yytext);}
+    | I_LDB ADDRESS NUMBER  {count+=3;fprintf(fp, " %x %s", LDBa, yytext);}
     ;
 
 instr_ldx
-    : I_LDX NUMBER          {fprintf(fp, " %x %s", LDXi, yytext);}
-    | I_LDX ADDRESS NUMBER  {fprintf(fp, " %x %s", LDXa, yytext);}
+    : I_LDX NUMBER          {count+=2;fprintf(fp, " %x %s", LDXi, yytext);}
+    | I_LDX ADDRESS NUMBER  {count+=3;fprintf(fp, " %x %s", LDXa, yytext);}
     ;
 
 instr_ldy
-    : I_LDY NUMBER          {fprintf(fp, " %x %s", LDYi, yytext);}
-    | I_LDY ADDRESS NUMBER  {fprintf(fp, " %x %s", LDYa, yytext);}
+    : I_LDY NUMBER          {count+=2;fprintf(fp, " %x %s", LDYi, yytext);}
+    | I_LDY ADDRESS NUMBER  {count+=3;fprintf(fp, " %x %s", LDYa, yytext);}
     ;
 
 instr_anda
-    : I_ANDA NUMBER         {fprintf(fp, " %x %s", ANDAi, yytext);}
-    | I_ANDA ADDRESS NUMBER {fprintf(fp, " %x %s", ANDAa, yytext);}
+    : I_ANDA NUMBER         {count+=2;fprintf(fp, " %x %s", ANDAi, yytext);}
+    | I_ANDA ADDRESS NUMBER {count+=3;fprintf(fp, " %x %s", ANDAa, yytext);}
     ;
 
 instr_andb
-    : I_ANDB NUMBER         {fprintf(fp, " %x %s", ANDBi, yytext);}
-    | I_ANDB ADDRESS NUMBER {fprintf(fp, " %x %s", ANDBa, yytext);}
+    : I_ANDB NUMBER         {count+=2;fprintf(fp, " %x %s", ANDBi, yytext);}
+    | I_ANDB ADDRESS NUMBER {count+=3;fprintf(fp, " %x %s", ANDBa, yytext);}
     ;
 
-instr_sta: I_STA ADDRESS NUMBER   {fprintf(fp, " %x %s", STA, yytext);}
+instr_sta: I_STA ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", STA, yytext);}
     ;
 
-instr_stb: I_STB ADDRESS NUMBER   {fprintf(fp, " %x %s", STB, yytext);}
+instr_stb: I_STB ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", STB, yytext);}
     ;
 
-instr_stx: I_STX ADDRESS NUMBER   {fprintf(fp, " %x %s", STX, yytext);}
+instr_stx: I_STX ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", STX, yytext);}
     ;
 
-instr_sty: I_STY ADDRESS NUMBER   {fprintf(fp, " %x %s", STY, yytext);}
+instr_sty: I_STY ADDRESS NUMBER   {count+=3;fprintf(fp, " %x %s", STY, yytext);}
     ;
 
 instr_ora
-    : I_ORA NUMBER          {fprintf(fp, " %x %s", ORAi, yytext);}
-    | I_ORA ADDRESS NUMBER  {fprintf(fp, " %x %s", ORAa, yytext);}
+    : I_ORA NUMBER          {count+=3;fprintf(fp, " %x %s", ORAi, yytext);}
+    | I_ORA ADDRESS NUMBER  {count+=3;fprintf(fp, " %x %s", ORAa, yytext);}
     ;
 
 instr_orb
-    : I_ORB NUMBER          {fprintf(fp, " %x %s", ORBi, yytext);}
-    | I_ORB ADDRESS NUMBER  {fprintf(fp, " %x %s", ORBa, yytext);}
+    : I_ORB NUMBER          {count+=2;fprintf(fp, " %x %s", ORBi, yytext);}
+    | I_ORB ADDRESS NUMBER  {count+=3;fprintf(fp, " %x %s", ORBa, yytext);}
     ;
 
-instr_stop: I_STOP  {fprintf(fp, " %x", STOP);}
+instr_stop: I_STOP  {count++;fprintf(fp, " %x", STOP);}
     ;
 
 %%
