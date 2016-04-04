@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "M8_instructions.h"
 
 FILE *fp;
@@ -14,7 +15,7 @@ void yyerror(const char *s);
 
 typedef struct {
     char *key;
-    int *value;
+    int  value;
 } Map;
 
 Map table[100];
