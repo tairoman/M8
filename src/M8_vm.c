@@ -643,10 +643,11 @@ void M8_eval(M8_VM *vm, char instruction) {
     vm->PC++;
 }
 
-int main() {
+int main(int argc, char **argv) {
 
     #ifndef M8_DEBUG
-    char *s = M8_read_file("test.txt");
+    assert(argc == 2);
+    char *s = M8_read_file(argv[1]);
     char *token;
     uint8_t array[256];
     uint8_t val;

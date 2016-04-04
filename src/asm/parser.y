@@ -447,16 +447,18 @@ void yyerror(const char* s) {
 }
 
 int main(int argc, char **argv) {
-    if (argc==2){
 
-        fp = fopen("test1.txt", "w");
+    fp = fopen(argv[1], "w");
 
-        if ((yyin = fopen(argv[1], "rb")) != NULL){
-            yyparse();
-            fclose(yyin);
+    char *p;
+    if (argc==3){
+        if((p = strrchr(argv[2],'.')) != NULL && strcmp(p,".s") == 0) {
+            if ((yyin = fopen(argv[2], "rb")) != NULL){
+                yyparse();
+                fclose(yyin);
+            }
+            else{ printf("Could not open file\n");}
         }
-        else{ printf("Could not open file\n");}
-
 
         fclose(fp);
     }

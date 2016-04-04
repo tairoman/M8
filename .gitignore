@@ -3,6 +3,7 @@
 .idea/*
 src/myExe
 *.txt
+*.s
 *.tab.c
 *.tab.h
 *.yy.c
