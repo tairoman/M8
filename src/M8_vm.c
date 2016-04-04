@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "M8_interpreter.h"
+#include "M8_vm.h"
 #include "M8_instructions.h"
 
 #define M8_MIN 0
