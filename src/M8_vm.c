@@ -46,18 +46,30 @@ inline bool M8_get_bit_seven(int16_t x) {
     return ((x>>7) & 1) == 1;
 }
 
+/*
+    Sets a flag in the flag register (CC)
+*/
 inline void M8_set_flag(M8_VM *vm, M8_Flags f) {
     (vm->CC) |= 1 << f;
 }
 
+/*
+    Clears a flag in the flag register (CC)
+*/
 inline void M8_clear_flag(M8_VM *vm, M8_Flags f) {
     (vm->CC) &= ~(1 << f);
 }
 
+/*
+    Fetches the flag f from the flag register (CC)
+*/
 inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
     return (uint8_t) (((vm->CC) >> f) & 1);
 }
 
+/*
+    Prints the current state of all the registers
+*/
 void M8_print_registers(const M8_VM *vm) {
     printf("Registers:\n");
     printf("A: %d\n", vm->A);
@@ -68,6 +80,9 @@ void M8_print_registers(const M8_VM *vm) {
     printf("PC: %d\n",vm->PC);
 }
 
+/*
+    Prints the current state of all the flags
+*/
 void M8_print_flags(const M8_VM *vm) {
     printf("Flags:\n");
     printf("C: %d\n", M8_get_flag(vm, M8_C));
@@ -76,12 +91,30 @@ void M8_print_flags(const M8_VM *vm) {
     printf("N: %d\n", M8_get_flag(vm, M8_N));
 }
 
+/*
+    Print all
+*/
 void M8_print_state(const M8_VM *vm) {
     printf("------------------\n");
     M8_print_registers(vm);
     M8_print_flags(vm);
 }
 
+
+/*
+    HELPER FUNCTIONS FOR INSTRUCTIONS
+*/
+
+
+/*
+    Sets or clear flags depending on an operation that just occured.
+    Sets:
+        C - if the result does not fit in a 8-bit number.
+        V - if an two's complement overflow has happened.
+        N - if the result is negative.
+        Z - if the result is zero.
+    else, clear the flag.
+*/
 void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2) {
     if (result < M8_MIN || result > M8_MAX) {
         M8_set_flag(vm, M8_C);
@@ -110,6 +143,13 @@ void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const in
     }
 }
 
+/*
+    Compares the value of a register and an argument and
+    changes the flags depending on the results.
+    For example, flag Z is set if the operands are equal.
+    Example:
+        [CMPA, 15] - Compares the register A with 15.
+*/
 void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute) {
     uint8_t op = vm->memory[vm->PC+1];
     if (is_absolute) {op = vm->memory[op];}
@@ -118,11 +158,21 @@ void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute) {
     vm->PC++;
 }
 
+/*
+    Clears a register. Sets flag Z.
+    Example:
+        [CLRA] - Clears register A
+*/
 void M8_clr(M8_VM *vm, uint8_t *r) {
     *r = 0;
     M8_set_flag(vm, M8_Z);
 }
 
+/*
+    Increases the value of a register by 1.
+    Example:
+        [INCA] - Equals A += 1
+*/
 void M8_inc(M8_VM *vm, uint8_t *r) {
     (*r)++;
     int16_t temp = *r;
