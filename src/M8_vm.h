@@ -8,26 +8,25 @@
 
 /*
    - TODO: Test all M8_Instructions!
-   - TODO: Interrupts?
 */
 
 typedef enum {
-    M8_C = 0,
-    M8_Z = 1,
-    M8_V = 2,
-    M8_N = 3
+    M8_C = 0, // Carry flag
+    M8_Z = 1, // Zero flag
+    M8_V = 2, // Overflow flag
+    M8_N = 3  // Negative flag
 } M8_Flags;
 
 typedef struct {
-    uint8_t A;
-    uint8_t B;
-    uint8_t X;
-    uint8_t Y;
-    uint8_t SP;
-    uint8_t PC;
-    uint8_t CC;
+    uint8_t A;    // Register A
+    uint8_t B;    // Register B
+    uint8_t X;    // Register X
+    uint8_t Y;    // Register Y
+    uint8_t SP;   // Register Stack Pointer
+    uint8_t PC;   // Register Program Pointer
+    uint8_t CC;   // Register Condition Codes (Flags)
 
-    uint8_t memory[256];
+    uint8_t memory[256]; // 8-bit adressable memory
 
 } M8_VM;
 
