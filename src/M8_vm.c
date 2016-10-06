@@ -16,6 +16,7 @@ bool running = true;
 
 /*
     Reads a file and returns the content as a string.
+    
     TODO: Make more generic with malloc size.
           (Take another argument)
 */
@@ -102,7 +103,11 @@ void M8_print_state(const M8_VM *vm) {
 
 
 /*
+
     HELPER FUNCTIONS FOR INSTRUCTIONS
+    
+    TODO: Make static
+
 */
 
 
@@ -179,12 +184,22 @@ void M8_inc(M8_VM *vm, uint8_t *r) {
     M8_change_flags(vm, temp, *r, 1);
 }
 
+/*
+    Decreases the value of a register by 1.
+    Example:
+        [DECA] - Equals A -= 1
+*/
 void M8_dec(M8_VM *vm, uint8_t *r) {
     int16_t temp = (*r)- 1;
     (*r)--;
     M8_change_flags(vm, temp, *r, 1);
 }
 
+/*
+    Loads a value to a register.
+    Example:
+        [LDA, 5] - Loads the value 5 to register A
+*/
 void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute) {
     uint8_t num = vm->memory[++vm->PC];
     if (is_absolute) {num = vm->memory[num];}
@@ -192,22 +207,47 @@ void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute) {
     M8_change_flags(vm, *r,0,0);
 }
 
+/*
+    AND-operation on a register with an argument.
+    Example:
+        [ANDA, 5] - And between register A and 5
+        
+    TODO: Why doesn't this function change flags?
+*/
 void M8_and(M8_VM *vm, uint8_t *r, bool is_absolute) {
     uint8_t num = vm->memory[++vm->PC];
     if (is_absolute) {num = vm->memory[num];}
     *r &= num;
 }
 
+/*
+    OR-operation on a register with an argument.
+    Example:
+        [ORA, 5] - Or between register A and 5
+        
+    TODO: Why doesn't this function change flags?
+*/
 void M8_or(M8_VM *vm, uint8_t *r, bool is_absolute) {
     uint8_t num = vm->memory[++vm->PC];
     if (is_absolute) {num = vm->memory[num];}
     *r |= num;
 }
 
+/*
+    Stores a register value in memory.
+    Example:
+        [STA, 17] - Stores value of register A at adress 17
+*/
 void M8_store(M8_VM *vm, uint8_t r) {
     vm->memory[++vm->PC] = r;
 }
 
+/*
+    Similar to M8_and function but doesn't change the register value.
+    Therefore it is best used when you'd like to check flags only.
+    Example:
+        [BITA, 5] - And between register A and 5. Doesn't change A.
+*/
 void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute) {
     uint8_t op = vm->memory[++vm->PC];
     if (is_absolute) {op = vm->memory[op];}
@@ -215,18 +255,37 @@ void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute) {
     M8_change_flags(vm, temp, r, op);
 }
 
+/*
+    Logical shift right. Shifts the value of a register one step right.
+    Example:
+        [LSRA] - Shifts register A one step right
+*/
 void M8_lsr(M8_VM *vm, uint8_t *r) {
     *r >>= 1;
     int16_t temp = *r;
     M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
 }
 
+/*
+    Logical shift left. Shifts the value of a register one step left.
+    Example:
+        [LSLA] - Shifts register A one step left
+*/
 void M8_lsl(M8_VM *vm, uint8_t *r) {
     *r <<= 1;
     int16_t temp = *r;
     M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
 }
 
+/*
+    Function performing the following arithmetic operations:
+        * Addition
+        * Subtraction
+        * Multiplication
+        * Division
+    Example:
+        [ADDA, 5] - A += 5
+*/
 void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute) {
     int16_t temp = 0;
     uint8_t num = vm->memory[vm->PC+1];
@@ -242,6 +301,13 @@ void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute) {
     *r = (uint8_t) temp;
 }
 
+/*
+    Function for jumping in memory.
+    Example:
+        [BRA, 6] Branch always to adress 6.
+        
+    TODO: What about having to use n - 1 for jumping to n ?
+*/
 void M8_branch(M8_VM *vm, uint8_t will_jump) {
     if (will_jump) {
         vm->PC = vm->memory[++vm->PC];
@@ -250,28 +316,57 @@ void M8_branch(M8_VM *vm, uint8_t will_jump) {
     }
 }
 
+/*
+    Used for pushing register to stack in memory.
+    Example:
+        [PHSA] - Push register A to top of stack
+*/
 void M8_push(M8_VM *vm, uint8_t r) {
     vm->memory[++vm->SP] = r;
 }
 
+/*
+    Used for pulling the top of stack to a register.
+    Example:
+        [PULA] - Pull top of stack to register A
+*/
 void M8_pull(M8_VM *vm, uint8_t *r) {
     *r = vm->memory[vm->SP--];
 }
 
+/*
+    Function performing a transfer(move) between two registers.
+    Example:
+        [TRFAB] - Transfer value in register A to register B
+*/
 void M8_transfer(uint8_t sender_r, uint8_t *receiver_r) {
     *receiver_r = sender_r;
 }
 
+/*
+    Jump to subroutine.
+    Used to begin a subroutine. Use with RTS.
+    Example:
+        [JSR, 40] - Jump to the subroutine that begins at adress 40
+*/
 void M8_jsr(M8_VM *vm) {
     vm->memory[++vm->SP] = vm->PC;
-    /* Mer register som ska upp på stacken? */
     vm->PC = vm->memory[++vm->PC];
 }
 
+/*
+    Return from subroutine.
+    Used to end a subroutine, by restoring the program counter to what it was before. Use with JSR.
+    Example:
+        [JSR, ... , RTS] - Jump to and return from subroutine
+*/
 void M8_rts(M8_VM *vm) {
     vm->PC = vm->memory[--vm->SP];
 }
 
+/*
+    Used to evaluate an instruction, by calling helper functions.
+*/
 void M8_eval(M8_VM *vm, char instruction) {
     uint8_t num;
     switch (instruction) {
@@ -701,6 +796,9 @@ void M8_eval(M8_VM *vm, char instruction) {
     vm->PC++;
 }
 
+/*
+    TODO: Move out of this file.
+*/
 int main(int argc, char **argv) {
 
     #ifndef M8_DEBUG
