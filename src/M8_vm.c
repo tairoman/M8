@@ -2,42 +2,32 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "M8_vm.h"
 #include "M8_instructions.h"
+#include "M8_helper.h"
 
 #define M8_MIN 0
 #define M8_MAX 255
 
-#define M8_DEBUG
+//#define M8_DEBUG
 
 bool running = true;
 
 /*
-    Reads a file and returns the content as a string.
-    
-    TODO: Make more generic with malloc size.
-          (Take another argument)
-*/
-char *M8_read_file(char *filename) {
-    int ch;
-    FILE *fp;
-    char *s = malloc(2*256*2*sizeof(char)); // Max 256 instructions * 2 hex chars * approx spaces
-    int index = 0;
-
-    fp = fopen(filename,"r");
-
-    assert(fp!=NULL); // TODO: Change to nice error message
-
-    while( ( ch = fgetc(fp) ) != EOF ){
-        s[index++] = (char) ch;
-    }
-    s[index] = '\0';
-
-    fclose(fp);
-    return s;
-
+    Initial state of the vm
+ */
+void M8_init_vm(M8_VM *vm){
+    vm->A  = 0;
+    vm->B  = 0;
+    vm->X  = 0;
+    vm->Y  = 0;
+    vm->CC = 0;
+    vm->PC = 0;
+    vm->SP = 0;
 }
+
 /*
     Returns the 7th bit of a number. Used to check for overflow.
     Example: 7th bit on op1 and op2 is set but not on result -> overflow
@@ -804,7 +794,7 @@ int main(int argc, char **argv) {
     assert(argc == 2);
     char *s = M8_read_file(argv[1]);
     char *token;
-    uint8_t array[256];
+    uint8_t array[256] = { 0 };
     uint8_t val;
     char *endptr;
     int index = 0;
@@ -821,12 +811,14 @@ int main(int argc, char **argv) {
         array[index++] = val;
     }
     #else
-    uint8_t array[256] ={LDAi, 7, DECA, BNE, 1, LDBi, 6, CLRA, DECA, TRFBA, MULBi, 2, STOP};
+    uint8_t array[256] ={LDAi, 5, LDBi, 4, STOP};
     #endif
 
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
     assert(vm!=NULL);
+    M8_init_vm(vm);
     for(int i=0; i < 256;i++){
+        printf("%d: %x\n", i, array[i]);
         vm->memory[i] = array[i];
     }
     while (running) {
