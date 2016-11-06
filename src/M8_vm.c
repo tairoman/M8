@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "M8_vm.h"
 #include "M8_instructions.h"
@@ -10,7 +9,7 @@
 #define M8_MIN 0
 #define M8_MAX 255
 
-//#define M8_DEBUG
+#define M8_DEBUG
 
 bool running = true;
 
