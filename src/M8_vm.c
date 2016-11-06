@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "M8_vm.h"
 #include "M8_instructions.h"
-#include "M8_helper.h"
 
 #define M8_MIN 0
 #define M8_MAX 255

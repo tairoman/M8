@@ -2,6 +2,8 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <string.h>
 
 #include "M8_helper.h"
 
@@ -28,5 +30,25 @@ char *M8_read_file(char *filename) {
 
     fclose(fp);
     return s;
+}
 
+void parse(char *str, uint8_t *dest){
+    char *token;
+    uint8_t array[256] = { 0 };
+    uint8_t val;
+    char *endptr;
+    int index = 0;
+
+    token = strtok(str, " ");
+    val = (uint8_t) strtol(token, &endptr, 16);
+    array[index++] = val;
+
+    while( token != NULL ) {
+        token = strtok(NULL, " ");
+        if (token == NULL) { continue;}
+
+        val = (uint8_t) strtol(token, &endptr, 16);
+        array[index++] = val;
+    }
+    memcpy(dest, array, sizeof(array));
 }

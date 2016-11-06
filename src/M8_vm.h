@@ -5,6 +5,7 @@
 #define M8_INTERPRETER_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 /*
    - TODO: Test all M8_Instructions!
