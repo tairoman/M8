@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
-#include <string.h>
 #include <stdint.h>
 
 #include "M8_vm.h"
@@ -20,9 +19,11 @@ int main(int argc, char **argv) {
     M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
     assert(vm!=NULL);
     M8_init_vm(vm);
+
     for(int i=0; i < 256;i++){
         vm->memory[i] = array[i];
     }
+
     while (M8_eval(vm, vm->memory[vm->PC])) {
         M8_print_state(vm);
     }

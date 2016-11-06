@@ -38,34 +38,12 @@ typedef enum {
     DIV
 } M8_Operators;
 
-//extern inline bool M8_get_bit_seven(int16_t x);
-//extern inline void M8_set_flag(M8_VM *vm, M8_Flags f);
-//extern inline void M8_clear_flag(M8_VM *vm, M8_Flags f);
-//extern inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f);
-void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2);
+/* Exported functions */
+// TODO: Describe these functions
 void M8_print_registers(const M8_VM *vm);
 void M8_print_flags(const M8_VM *vm);
 void M8_print_state(const M8_VM *vm);
 bool M8_eval(M8_VM *vm, char instruction);
-void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute);
-void M8_and(M8_VM *vm, uint8_t *r, bool is_absolute);
-void M8_or(M8_VM *vm, uint8_t *r, bool is_absolute);
-void M8_clr(M8_VM *vm, uint8_t *r);
-void M8_inc(M8_VM *vm, uint8_t *r);
-void M8_dec(M8_VM *vm, uint8_t *r);
-void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute);
-void M8_store(M8_VM *vm, uint8_t r);
-void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute);
-void M8_lsr(M8_VM *vm, uint8_t *r);
-void M8_lsl(M8_VM *vm, uint8_t *r);
-void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute);
-void M8_branch(M8_VM *vm, uint8_t will_jump);
-void M8_push(M8_VM *vm, uint8_t r);
-void M8_pull(M8_VM *vm, uint8_t *r);
-void M8_transfer(uint8_t sender_r, uint8_t *receiver_r);
-void M8_jsr(M8_VM *vm);
-void M8_rts(M8_VM *vm);
 void M8_init_vm(M8_VM *vm);
-
 
 #endif

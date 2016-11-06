@@ -8,6 +8,8 @@
 #define M8_MIN 0
 #define M8_MAX 255
 
+static inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f);
+
 /*
     Initial state of the vm
  */
@@ -19,35 +21,6 @@ void M8_init_vm(M8_VM *vm){
     vm->CC = 0;
     vm->PC = 0;
     vm->SP = 0;
-}
-
-/*
-    Returns the 7th bit of a number. Used to check for overflow.
-    Example: 7th bit on op1 and op2 is set but not on result -> overflow
-*/
-static inline bool M8_get_bit_seven(int16_t x) {
-    return ((x>>7) & 1) == 1;
-}
-
-/*
-    Sets a flag in the flag register (CC)
-*/
-static inline void M8_set_flag(M8_VM *vm, M8_Flags f) {
-    (vm->CC) |= 1 << f;
-}
-
-/*
-    Clears a flag in the flag register (CC)
-*/
-static inline void M8_clear_flag(M8_VM *vm, M8_Flags f) {
-    (vm->CC) &= ~(1 << f);
-}
-
-/*
-    Fetches the flag f from the flag register (CC)
-*/
-static inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
-    return (uint8_t) (((vm->CC) >> f) & 1);
 }
 
 /*
@@ -83,6 +56,34 @@ void M8_print_state(const M8_VM *vm) {
     M8_print_flags(vm);
 }
 
+/*
+    Returns the 7th bit of a number. Used to check for overflow.
+    Example: 7th bit on op1 and op2 is set but not on result -> overflow
+*/
+static inline bool M8_get_bit_seven(int16_t x) {
+    return ((x>>7) & 1) == 1;
+}
+
+/*
+    Sets a flag in the flag register (CC)
+*/
+static inline void M8_set_flag(M8_VM *vm, M8_Flags f) {
+    (vm->CC) |= 1 << f;
+}
+
+/*
+    Clears a flag in the flag register (CC)
+*/
+static inline void M8_clear_flag(M8_VM *vm, M8_Flags f) {
+    (vm->CC) &= ~(1 << f);
+}
+
+/*
+    Fetches the flag f from the flag register (CC)
+*/
+static inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
+    return (uint8_t) (((vm->CC) >> f) & 1);
+}
 
 /*
 
@@ -102,7 +103,7 @@ void M8_print_state(const M8_VM *vm) {
         Z - if the result is zero.
     else, clear the flag.
 */
-void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2) {
+static void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const int8_t op2) {
     if (result < M8_MIN || result > M8_MAX) {
         M8_set_flag(vm, M8_C);
     } else {
@@ -137,7 +138,7 @@ void M8_change_flags(M8_VM *vm, const int16_t result, const int8_t op1, const in
     Example:
         [CMPA, 15] - Compares the register A with 15.
 */
-void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute) {
+static void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute) {
     uint8_t op = vm->memory[vm->PC+1];
     if (is_absolute) {op = vm->memory[op];}
     int16_t temp = r - op;
@@ -150,7 +151,7 @@ void M8_cmp(M8_VM *vm, uint8_t r, bool is_absolute) {
     Example:
         [CLRA] - Clears register A
 */
-void M8_clr(M8_VM *vm, uint8_t *r) {
+static void M8_clr(M8_VM *vm, uint8_t *r) {
     *r = 0;
     M8_set_flag(vm, M8_Z);
 }
@@ -160,7 +161,7 @@ void M8_clr(M8_VM *vm, uint8_t *r) {
     Example:
         [INCA] - Equals A += 1
 */
-void M8_inc(M8_VM *vm, uint8_t *r) {
+static void M8_inc(M8_VM *vm, uint8_t *r) {
     (*r)++;
     int16_t temp = *r;
     M8_change_flags(vm, temp, *r, 1);
@@ -171,7 +172,7 @@ void M8_inc(M8_VM *vm, uint8_t *r) {
     Example:
         [DECA] - Equals A -= 1
 */
-void M8_dec(M8_VM *vm, uint8_t *r) {
+static void M8_dec(M8_VM *vm, uint8_t *r) {
     int16_t temp = (*r)- 1;
     (*r)--;
     M8_change_flags(vm, temp, *r, 1);
@@ -182,7 +183,7 @@ void M8_dec(M8_VM *vm, uint8_t *r) {
     Example:
         [LDA, 5] - Loads the value 5 to register A
 */
-void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute) {
+static void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute) {
     uint8_t num = vm->memory[++vm->PC];
     if (is_absolute) {num = vm->memory[num];}
     *r = num;
@@ -196,7 +197,7 @@ void M8_load(M8_VM *vm, uint8_t *r, bool is_absolute) {
         
     TODO: Why doesn't this function change flags?
 */
-void M8_and(M8_VM *vm, uint8_t *r, bool is_absolute) {
+static void M8_and(M8_VM *vm, uint8_t *r, bool is_absolute) {
     uint8_t num = vm->memory[++vm->PC];
     if (is_absolute) {num = vm->memory[num];}
     *r &= num;
@@ -209,7 +210,7 @@ void M8_and(M8_VM *vm, uint8_t *r, bool is_absolute) {
         
     TODO: Why doesn't this function change flags?
 */
-void M8_or(M8_VM *vm, uint8_t *r, bool is_absolute) {
+static void M8_or(M8_VM *vm, uint8_t *r, bool is_absolute) {
     uint8_t num = vm->memory[++vm->PC];
     if (is_absolute) {num = vm->memory[num];}
     *r |= num;
@@ -220,7 +221,7 @@ void M8_or(M8_VM *vm, uint8_t *r, bool is_absolute) {
     Example:
         [STA, 17] - Stores value of register A at adress 17
 */
-void M8_store(M8_VM *vm, uint8_t r) {
+static void M8_store(M8_VM *vm, uint8_t r) {
     vm->memory[++vm->PC] = r;
 }
 
@@ -230,7 +231,7 @@ void M8_store(M8_VM *vm, uint8_t r) {
     Example:
         [BITA, 5] - And between register A and 5. Doesn't change A.
 */
-void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute) {
+static void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute) {
     uint8_t op = vm->memory[++vm->PC];
     if (is_absolute) {op = vm->memory[op];}
     int16_t temp = r & op;
@@ -242,7 +243,7 @@ void M8_bit(M8_VM *vm, uint8_t r, bool is_absolute) {
     Example:
         [LSRA] - Shifts register A one step right
 */
-void M8_lsr(M8_VM *vm, uint8_t *r) {
+static void M8_lsr(M8_VM *vm, uint8_t *r) {
     *r >>= 1;
     int16_t temp = *r;
     M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
@@ -253,7 +254,7 @@ void M8_lsr(M8_VM *vm, uint8_t *r) {
     Example:
         [LSLA] - Shifts register A one step left
 */
-void M8_lsl(M8_VM *vm, uint8_t *r) {
+static void M8_lsl(M8_VM *vm, uint8_t *r) {
     *r <<= 1;
     int16_t temp = *r;
     M8_change_flags(vm, temp, *r, 1); /* Is 1 correct? */
@@ -268,7 +269,7 @@ void M8_lsl(M8_VM *vm, uint8_t *r) {
     Example:
         [ADDA, 5] - A += 5
 */
-void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute) {
+static void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute) {
     int16_t temp = 0;
     uint8_t num = vm->memory[vm->PC+1];
     if (is_absolute) {num = vm->memory[num];}
@@ -290,7 +291,7 @@ void M8_calc(M8_VM *vm, uint8_t *r, M8_Operators op, bool is_absolute) {
         
     TODO: What about having to use n - 1 for jumping to n ?
 */
-void M8_branch(M8_VM *vm, uint8_t will_jump) {
+static void M8_branch(M8_VM *vm, uint8_t will_jump) {
     if (will_jump) {
         vm->PC = vm->memory[++vm->PC];
     } else {
@@ -303,7 +304,7 @@ void M8_branch(M8_VM *vm, uint8_t will_jump) {
     Example:
         [PHSA] - Push register A to top of stack
 */
-void M8_push(M8_VM *vm, uint8_t r) {
+static void M8_push(M8_VM *vm, uint8_t r) {
     vm->memory[++vm->SP] = r;
 }
 
@@ -312,7 +313,7 @@ void M8_push(M8_VM *vm, uint8_t r) {
     Example:
         [PULA] - Pull top of stack to register A
 */
-void M8_pull(M8_VM *vm, uint8_t *r) {
+static void M8_pull(M8_VM *vm, uint8_t *r) {
     *r = vm->memory[vm->SP--];
 }
 
@@ -321,7 +322,7 @@ void M8_pull(M8_VM *vm, uint8_t *r) {
     Example:
         [TRFAB] - Transfer value in register A to register B
 */
-void M8_transfer(uint8_t sender_r, uint8_t *receiver_r) {
+static void M8_transfer(uint8_t sender_r, uint8_t *receiver_r) {
     *receiver_r = sender_r;
 }
 
@@ -331,7 +332,7 @@ void M8_transfer(uint8_t sender_r, uint8_t *receiver_r) {
     Example:
         [JSR, 40] - Jump to the subroutine that begins at adress 40
 */
-void M8_jsr(M8_VM *vm) {
+static void M8_jsr(M8_VM *vm) {
     vm->memory[++vm->SP] = vm->PC;
     vm->PC = vm->memory[++vm->PC];
 }
@@ -342,7 +343,7 @@ void M8_jsr(M8_VM *vm) {
     Example:
         [JSR, ... , RTS] - Jump to and return from subroutine
 */
-void M8_rts(M8_VM *vm) {
+static void M8_rts(M8_VM *vm) {
     vm->PC = vm->memory[--vm->SP];
 }
 

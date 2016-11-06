@@ -32,6 +32,7 @@ char *M8_read_file(char *filename) {
     return s;
 }
 
+// TODO: Document this function
 void parse(char *str, uint8_t *dest){
     char *token;
     uint8_t array[256] = { 0 };
@@ -50,5 +51,6 @@ void parse(char *str, uint8_t *dest){
         val = (uint8_t) strtol(token, &endptr, 16);
         array[index++] = val;
     }
+
     memcpy(dest, array, sizeof(array));
 }
