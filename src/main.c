@@ -3,9 +3,9 @@
 #include <assert.h>
 #include <stdint.h>
 
-#include "M8_vm.h"
-#include "M8_instructions.h"
-#include "M8_helper.h"
+#include "vm/M8_vm.h"
+#include "vm/M8_instructions.h"
+#include "vm/M8_helper.h"
 
 int main(int argc, char **argv) {
 

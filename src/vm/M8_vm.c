@@ -11,7 +11,7 @@
 static inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f);
 
 /*
-    Initial state of the vm
+    Sets initial state for the virtual machine
  */
 void M8_init_vm(M8_VM *vm){
     vm->A  = 0;
@@ -774,7 +774,9 @@ bool M8_eval(M8_VM *vm, char instruction) {
         case STOP:
             return false;
 
-        default:exit(155);
+        default:
+            printf("Case %s does not exist.\n", &instruction);
+            exit(EXIT_FAILURE);
     }
     vm->PC++;
 

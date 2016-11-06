@@ -14,7 +14,7 @@
           (Take another argument)
 */
 char *M8_read_file(char *filename) {
-    int ch;
+    int ch; // Current character. int type because EOF is an int.
     FILE *fp;
     char *s = malloc(2*256*2*sizeof(char)); // Max 256 instructions * 2 hex chars * approx spaces
     int index = 0;
