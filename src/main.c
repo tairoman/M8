@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
         parse(s, array);
     }
 
-    M8_VM *vm = (M8_VM*) malloc(sizeof(M8_VM));
+    M8_VM *vm = malloc(sizeof(M8_VM));
     assert(vm!=NULL);
     M8_init_vm(vm);
 
