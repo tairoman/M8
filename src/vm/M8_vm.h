@@ -1,5 +1,3 @@
-//vim: set filetype=c:
-//vim: set ft=c:
 
 #ifndef M8_INTERPRETER_H
 #define M8_INTERPRETER_H
