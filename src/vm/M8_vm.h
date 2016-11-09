@@ -1,3 +1,4 @@
+//vim: syntax=c
 
 #ifndef M8_INTERPRETER_H
 #define M8_INTERPRETER_H
