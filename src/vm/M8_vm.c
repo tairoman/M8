@@ -88,8 +88,6 @@ static inline uint8_t M8_get_flag(const M8_VM *vm, M8_Flags f) {
 /*
 
     HELPER FUNCTIONS FOR INSTRUCTIONS
-    
-    TODO: Make static
 
 */
 
